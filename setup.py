@@ -28,7 +28,7 @@ setup(name = 'uttl-buildout',
 	test_suite = 'uttl.buildout.tests',
 	entry_points = { 
 		'zc.buildout': [
-			'versioncheck = uttl.buildout.versioncheck:Recipe',
+			'versioncheck = uttl.buildout.versioncheck.versioncheck_recipe:VersionCheckRecipe',
 		]
 	},
 	)
