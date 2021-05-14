@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 def get_text_from_file(fn):
 	text = open(fn, 'rb').read()
@@ -15,20 +15,20 @@ setup(name = 'uttl-buildout',
 	author_email = 'mrhands31@gmail.com',
 	url = 'https://github.com/MrHands/uttl-buildout',
 	license = 'MIT',
-	packages = [ 'uttl', 'uttl.buildout', 'uttl.buildout.tests' ],
-	package_dir = { '': 'src' },
-	namespace_packages = [ 'uttl', 'uttl.buildout' ],
+	packages = find_packages(),
+	namespace_packages = [ 'uttl' ],
 	include_package_data = True,
 	zip_safe = False,
-	install_requires = [ 'setuptools', 'zc.buildout' ],
+	install_requires = [
+		'setuptools',
+		'zc.buildout'
+	],
 	tests_require = [ 'mock' ],
 	python_requires = '>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
 	test_suite = 'uttl.buildout.tests',
-	entry_points='''
-	[console_scripts]
-	develop = uttl.buildout.develop:develop
-	[zc.buildout.extension]
-	default = uttl.buildout.extension:extension
-	[uttl.buildout.commands]
-	versioncheck = uttl.buildout.commands:VersionCheck
-	''')
+	entry_points = { 
+		'zc.buildout': [
+			'versioncheck = uttl.buildout.versioncheck:Recipe',
+		]
+	},
+	)
