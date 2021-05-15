@@ -28,6 +28,12 @@ setup(name = 'uttl-buildout',
 	test_suite = 'uttl.buildout.tests',
 	entry_points = { 
 		'zc.buildout': [
+			'cmake = uttl.buildout.cmake.cmake_recipe:CmakeRecipe',
+			'copyfile = uttl.buildout.copyfile.copyfile_recipe:CopyFileRecipe',
+			'devenv = uttl.buildout.devenv.devenv_recipe:DevenvRecipe',
+			'inklecate = uttl.buildout.inklecate.inklecate_recipe:InklecateRecipe',
+			'qmake = uttl.buildout.qmake.qmake_recipe:QmakeRecipe',
+			'qtdeploy = uttl.buildout.qtdeploy.qtdeploy_recipe:QmakeRecipe',
 			'versioncheck = uttl.buildout.versioncheck.versioncheck_recipe:VersionCheckRecipe',
 		]
 	},
