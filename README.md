@@ -37,7 +37,7 @@ Add `uttl.buildout` to the `extensions` entry in your `[buildout]` section:
 
 # VersionCheck
 
-Recipe for finding the path to an executable and checking its version against a required one by using Python scripting. The resulting path and version number is written to an ini file in your parts directory. The script function will always be called and its output is checked against the values stored in the cache.
+Recipe for finding the path to an executable and checking its version against a required one using a Python function. The resulting path and version number is written to an ini file in your `parts` directory. The script function is called if the ini file does not exist. The output of the found version information is checked against the values stored in the cache during the `install` phase of the recipe. VersionCheck will always fail if the requested version cannot be found.
 
 ## Options
 
@@ -61,9 +61,27 @@ Recipe for finding the path to an executable and checking its version against a 
 
   Override for the name of the ini file in the parts directory.
 
+## Outputs
+
+``path``
+
+  Path to the found executable.
+
+``version_major``
+
+  Major version number of the executable.
+
+``version_minor``
+
+  Minor version number of the executable.
+
+``version_debug``
+
+  Debug version number of the executable.
+
 ## Example
 
-Using `vswhere.exe` to get the path to Visual Studio:
+Using `vswhere.exe` to get the path to Visual Studio 2017 (version 15):
 
     [visual-studio]
     recipe = uttl.buildout:versioncheck
@@ -92,3 +110,4 @@ Using `vswhere.exe` to get the path to Visual Studio:
         ...   return (False, 0, 0, 0, '')
         ...
         ... return (True, self.options['required_major'], self.options['required_minor'], 64, path)
+
