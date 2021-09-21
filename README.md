@@ -111,3 +111,16 @@ Using `vswhere.exe` to get the path to Visual Studio 2017 (version 15):
         ...
         ... return (True, self.options['required_major'], self.options['required_minor'], 64, path)
 
+# CMake
+
+Recipe for executing CMake commands.
+
+## Options
+
+``generator`` (optional)
+
+  Generator used by CMake to generate outputs. Example: `Visual Studio 2017 15 Win64`
+
+## Outputs
+
+## Example
