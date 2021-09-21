@@ -1,6 +1,10 @@
 # uttl.buildout.qtdeploy
 
-## Configuration Options
+## Configuration 
+
+``target_path`` (mandatory)
+
+  Path to the executable that the Qt deployment tool will inspect for dependencies.
 
 ``always_build`` (optional)
 
@@ -18,17 +22,29 @@
 
   List of translated languages to deploy, e.g. fr, uk, de. Leaving this option unspecified will skip deployment of translations.
 
-``compiler-runtime`` (default: 1)
+``compiler_runtime`` (optional)
 
-  Disable deployment of ANGLE libraries by setting this option to 0.
+  Force deployment of compiler runtime libraries by setting this option to 1. Disable deployment by setting it to 0.
 
-``angle`` (default: 1)
+``webkit2`` (optional)
 
-  Disable deployment of ANGLE libraries by setting this option to 0.
+  Force deployment of WebKit2 libraries by setting this option to 1. Disable deployment by setting it to 0.
 
-``opengl-sw`` (default: 1)
+``angle`` (optional
+
+  Force deployment of ANGLE libraries by setting this option to 1. Disable deployment by setting it to 0.
+
+``opengl_sw`` (default: 1)
 
   Disable deployment of the OpenGL software rasterizer library by setting this option to 0.
+
+``virtual_keyboard`` (default: 1)
+
+  Disable deployment of the Virtual Keyboard libraries by setting this option to 0.
+
+``system_d3d_compiler`` (default: 1)
+
+  Disable deployment of the system Direct3D compiler libraries by setting this option to 0.
 
 ## Example
 
