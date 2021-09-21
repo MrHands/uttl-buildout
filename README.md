@@ -35,6 +35,20 @@ Add `uttl.buildout` to the `extensions` entry in your `[buildout]` section:
     [buildout]
     extensions = uttl.buildout
 
+# Recipes
+
+The following scripts for buildout (recipes) come in this package:
+
+* `uttl.buildout.cmake`
+* `uttl.buildout.copyfile`
+* `uttl.buildout.devenv`
+* `uttl.buildout.inklecate`
+* `uttl.buildout.qmake`
+* `uttl.buildout.qtdeploy`
+* `uttl.buildout.versioncheck`
+
+Check out the source folders for detailed documentation about each command.
+
 # VersionCheck
 
 Recipe for finding the path to an executable and checking its version against a required one using a Python function. The resulting path and version number is written to an ini file in your `parts` directory. The script function is called if the ini file does not exist. The output of the found version information is checked against the values stored in the cache during the `install` phase of the recipe. VersionCheck will always fail if the requested version cannot be found.
@@ -110,17 +124,3 @@ Using `vswhere.exe` to get the path to Visual Studio 2017 (version 15):
         ...   return (False, 0, 0, 0, '')
         ...
         ... return (True, self.options['required_major'], self.options['required_minor'], 64, path)
-
-# CMake
-
-Recipe for executing CMake commands.
-
-## Options
-
-``generator`` (optional)
-
-  Generator used by CMake to generate outputs. Example: `Visual Studio 2017 15 Win64`
-
-## Outputs
-
-## Example

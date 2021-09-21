@@ -11,11 +11,6 @@ class CmakeRecipe(InstallRecipe):
 
 		self.options.setdefault('executable', 'cmake')
 
-		self.check_errors = re.compile(r'.*Error: (.*)')
-		self.check_failed = re.compile(r'.*(Build FAILED|CMake Error|MSBUILD : error).*')
-		self.check_artefacts = re.compile(r'.*(.+?) -> (.+)')
-		self.check_installed = re.compile(r'.*-- (.+?): (.+)')
-
 		self.args = [ ]
 
 		if 'generator' in self.options:
@@ -24,26 +19,23 @@ class CmakeRecipe(InstallRecipe):
 		if 'configure_path' in self.options:
 			self.args.append(self.options['configure_path'])
 
-		if 'install_path' in self.options:
-			self.args.append('-DCMAKE_INSTALL_PREFIX=' + os.path.abspath(self.options['install_path']))
-
-		if 'flags' in self.options:
-			self.args.append(self.options['flags'])
-
-		dirs = [dir for dir in list(self.options.keys()) if dir.endswith('_DIR')]
-		for dir in dirs:
-			self.args.append('-D%s:PATH=%s' % (dir, os.path.abspath(self.options[dir])))
-
 		if 'build_path' in self.options:
 			self.args.extend([ '--build', self.options['build_path'] ])
-		elif 'source_path' in self.options:
-			self.args.extend([ '--build', self.options['source_path'] ])
 
 		if 'target' in self.options:
 			self.args.extend([ '--target', self.options['target'] ])
 
 		if 'config' in self.options:
 			self.args.extend([ '--config', self.options['config'] ])
+
+		# variables
+
+		if 'install_path' in self.options:
+			self.args.append('-DCMAKE_INSTALL_PREFIX=' + os.path.abspath(self.options['install_path']))
+
+		if 'variables' in self.options:
+			for var in self.options['variables'].splitlines():
+				self.args.append('-D%s' % var)
 
 		self.options['args'] = ' '.join(str(e) for e in self.args)
 
@@ -69,6 +61,11 @@ class CmakeRecipe(InstallRecipe):
 
 		return self.options.created()
 
+	check_errors = re.compile(r'.*Error: (.*)')
+	check_failed = re.compile(r'.*(Build FAILED|CMake Error|MSBUILD : error).*')
+	check_artefacts = re.compile(r'.*(.+?) -> (.+)')
+	check_installed = re.compile(r'.*-- (.+?): (.+)')
+
 	def runCommand(self, args):
 		args = [ self.options['executable'] ] + args
 		
@@ -82,19 +79,19 @@ class CmakeRecipe(InstallRecipe):
 
 				# check for errors
 
-				if self.check_errors.match(stripped) or self.check_failed.match(stripped):
+				if check_errors.match(stripped) or check_failed.match(stripped):
 					success = False
 
 				# add artefacts to options
 
-				match = self.check_artefacts.match(stripped)
+				match = check_artefacts.match(stripped)
 				if match:
 					path = match.group(2)
 					self.options.created(os.path.abspath(path))
 
 				# add installed files to options
 
-				match = self.check_installed.match(stripped)
+				match = check_installed.match(stripped)
 				if match:
 					what = match.group(1)
 					path = match.group(2)
