@@ -18,7 +18,7 @@ class QtDeployRecipe(InstallRecipe):
 
 		if 'translations' in self.options:
 			translations = self.options['translations'].splitlines()
-			self.args.append(','.join(str(t) for t in translations))
+			self.args += [ '--translations', ','.join(str(t) for t in translations) ]
 		else:
 			self.args.append('--no-translations')
 
