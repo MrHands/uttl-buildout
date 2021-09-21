@@ -6,7 +6,7 @@ import os
 import re
 import subprocess
 
-class QmakeRecipe:
+class QmakeRecipe(object):
 	def __init__(self, buildout, name, options):
 		self.buildout, self.name, self.options = buildout, name, options
 		self.log = logging.getLogger(self.name)
@@ -60,3 +60,6 @@ class QmakeRecipe:
 			proc.communicate()
 
 			return proc.returncode == 0
+
+def uninstall(name, options):
+	pass

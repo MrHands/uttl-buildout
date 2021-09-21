@@ -9,6 +9,8 @@ class CmakeRecipe(object):
 		self.buildout, self.name, self.options = buildout, name, options
 		self.log = logging.getLogger(self.name)
 
+		self.options.setdefault('executable', 'cmake')
+
 		self.check_errors = re.compile(r'.*Error: (.*)')
 		self.check_failed = re.compile(r'.*(Build FAILED|CMake Error|MSBUILD : error).*')
 		self.check_artefacts = re.compile(r'.*(.+?) -> (.+)')
@@ -62,14 +64,32 @@ class CmakeRecipe(object):
 
 		# add manual artefact (e.g. generated solution)
 
-		self.options.created(os.path.abspath(self.options['artefact_path']))
+		if 'artefact_path' in self.options:
+			self.options.created(os.path.abspath(self.options['artefact_path']))
 
 		return self.options.created()
 
-	update = install
+	def update(self):
+		(installed_part_options, installed_exists) = self.buildout._read_installed_part_options()
+
+		part_options = installed_part_options[self.name]
+		if not part_options:
+			self.log.info('Installing again due to missing options.')
+			return self.install()
+
+		if not '__buildout_installed__' in part_options:
+			self.log.info('No files were installed previously.')
+			return self.install()
+
+		installed = (path.rstrip() for path in part_options['__buildout_installed__'].split())
+		for path in installed:
+			if not os.path.exists(path):
+				self.log.info('Installing again due to missing file.')
+				self.log.debug('MISSING: %s' % (path))
+				return self.install()
 
 	def runCommand(self, args):
-		args = [ 'cmake' ] + args
+		args = [ self.options['executable'] ] + args
 		
 		success = True
 
@@ -106,3 +126,6 @@ class CmakeRecipe(object):
 			proc.communicate()
 
 		return success
+
+def uninstall(name, options):
+	pass

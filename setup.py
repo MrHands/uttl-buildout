@@ -35,6 +35,15 @@ setup(name = 'uttl.buildout',
 			'qmake = uttl.buildout.qmake.qmake_recipe:QmakeRecipe',
 			'qtdeploy = uttl.buildout.qtdeploy.qtdeploy_recipe:QmakeRecipe',
 			'versioncheck = uttl.buildout.versioncheck.versioncheck_recipe:VersionCheckRecipe',
+		],
+		'zc.buildout.uninstall': [
+			'cmake = uttl.buildout.cmake.cmake_recipe:uninstall',
+			'copyfile = uttl.buildout.copyfile.copyfile_recipe:uninstall',
+			'devenv = uttl.buildout.devenv.devenv_recipe:uninstall',
+			'inklecate = uttl.buildout.inklecate.inklecate_recipe:uninstall',
+			'qmake = uttl.buildout.qmake.qmake_recipe:uninstall',
+			'qtdeploy = uttl.buildout.qtdeploy.qtdeploy_recipe:uninstall',
+			'versioncheck = uttl.buildout.versioncheck.versioncheck_recipe:uninstall',
 		]
 	},
 	)

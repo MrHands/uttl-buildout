@@ -7,7 +7,7 @@ import zc.buildout
 
 from zc.buildout import UserError
 
-class QtDeployRecipe:
+class QtDeployRecipe(object):
 	def __init__(self, buildout, name, options):
 		self.buildout, self.name, self.options = buildout, name, options
 		self.log = logging.getLogger(self.name)
@@ -67,3 +67,6 @@ class QtDeployRecipe:
 
 	def update(self):
 		pass
+
+def uninstall(name, options):
+	pass

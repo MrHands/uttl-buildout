@@ -2,7 +2,7 @@ import logging
 import os
 import shutil
 
-class CopyFileRecipe:
+class CopyFileRecipe(object):
 	def __init__(self, buildout, name, options):
 		self.buildout, self.name, self.options = buildout, name, options
 		self.log = logging.getLogger(self.name)
@@ -47,3 +47,6 @@ class CopyFileRecipe:
 		return self.options.created()
 
 	update = install
+
+def uninstall(name, options):
+	pass

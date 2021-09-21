@@ -9,7 +9,7 @@ import winreg
 
 from zc.buildout import UserError
 
-class VersionCheckRecipe:
+class VersionCheckRecipe(object):
 	def __init__(self, buildout, name, options):
 		self.buildout, self.name, self.options = buildout, name, options
 		self.log = logging.getLogger(self.name)
@@ -92,3 +92,6 @@ class VersionCheckRecipe:
 		return self.options.created()
 
 	update = install
+
+def uninstall(name, options):
+	pass
