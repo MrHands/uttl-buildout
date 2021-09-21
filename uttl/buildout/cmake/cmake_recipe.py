@@ -8,7 +8,10 @@ class CmakeRecipe:
 		self.buildout, self.name, self.options = buildout, name, options
 		self.log = logging.getLogger(self.name)
 
-		self.match_installed = re.compile(r'.*-- (.+?): (.+)')
+		self.check_errors = re.compile(r'.*Error: (.*)')
+		self.check_failed = re.compile(r'.*(Build FAILED|CMake Error|MSBUILD : error).*')
+		self.check_artefacts = re.compile(r'.*(.+?) -> (.+)')
+		self.check_installed = re.compile(r'.*-- (.+?): (.+)')
 
 		self.args = [ ]
 
@@ -42,22 +45,19 @@ class CmakeRecipe:
 		self.options['args'] = ' '.join(str(e) for e in self.args)
 
 	def install(self):
-		if not os.path.exists(self.options['artefact_path']):
-			if 'configure_path' in self.options:
-				configure_path = os.path.abspath(self.options['configure_path'])
+		if 'configure_path' in self.options:
+			configure_path = os.path.abspath(self.options['configure_path'])
 
-				if not os.path.exists(configure_path):
-					os.makedirs(configure_path, 0o777, True)
+			if not os.path.exists(configure_path):
+				os.makedirs(configure_path, 0o777, True)
 
-				self.working_dir = os.getcwd()
-				os.chdir(configure_path)
+			self.working_dir = os.getcwd()
+			os.chdir(configure_path)
 
-			self.runCommand(self.args)
+		self.runCommand(self.args)
 
-			if 'configure_path' in self.options:
-				os.chdir(self.working_dir)
-
-		self.options.created(self.options['artefact_path'])
+		if 'configure_path' in self.options:
+			os.chdir(self.working_dir)
 
 		return self.options.created()
 
@@ -65,8 +65,7 @@ class CmakeRecipe:
 
 	def runCommand(self, args):
 		args = [ 'cmake' ] + args
-		error_check = re.compile('.*Error: (.*)')
-		build_check = re.compile('.*(Build FAILED|CMake Error|MSBUILD : error).*')
+		
 		success = True
 
 		self.log.debug(str(args))
@@ -75,12 +74,21 @@ class CmakeRecipe:
 			for line in iter(proc.stdout.readline, b''):
 				stripped = line.rstrip().decode('UTF-8')
 
-				if error_check.match(stripped) or build_check.match(stripped):
+				# check for errors
+
+				if self.check_errors.match(stripped) or self.check_failed.match(stripped):
 					success = False
+
+				# add artefacts to options
+
+				match = self.check_artefacts.match(stripped)
+				if match:
+					path = match.group(2)
+					self.options.created(os.path.abspath(path))
 
 				# add installed files to options
 
-				match = self.match_installed.match(stripped)
+				match = self.check_installed.match(stripped)
 				if match:
 					what = match.group(1)
 					path = match.group(2)
