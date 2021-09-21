@@ -10,7 +10,7 @@ setup(name = 'uttl.buildout',
 	long_description = '\n\n'.join([
 		get_text_from_file('README.md'),
 		get_text_from_file('CHANGES.md')]),
-	keywords = 'buildout extension vcs develop',
+	keywords = 'buildout extension uttl cmake qmake qt copyfile version',
 	author = 'Mr. Hands',
 	author_email = 'mrhands31@gmail.com',
 	url = 'https://github.com/MrHands/uttl-buildout',

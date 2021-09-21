@@ -2,8 +2,9 @@ import logging
 import os
 import re
 import subprocess
+import types
 
-class CmakeRecipe:
+class CmakeRecipe(object):
 	def __init__(self, buildout, name, options):
 		self.buildout, self.name, self.options = buildout, name, options
 		self.log = logging.getLogger(self.name)
@@ -58,6 +59,10 @@ class CmakeRecipe:
 
 		if 'configure_path' in self.options:
 			os.chdir(self.working_dir)
+
+		# add manual artefact (e.g. generated solution)
+
+		self.options.created(os.path.abspath(self.options['artefact_path']))
 
 		return self.options.created()
 
