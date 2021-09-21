@@ -33,7 +33,7 @@ setup(name = 'uttl.buildout',
 			'devenv = uttl.buildout.devenv.devenv_recipe:DevenvRecipe',
 			'inklecate = uttl.buildout.inklecate.inklecate_recipe:InklecateRecipe',
 			'qmake = uttl.buildout.qmake.qmake_recipe:QmakeRecipe',
-			'qtdeploy = uttl.buildout.qtdeploy.qtdeploy_recipe:QmakeRecipe',
+			'qtdeploy = uttl.buildout.qtdeploy.qtdeploy_recipe:QtDeployRecipe',
 			'versioncheck = uttl.buildout.versioncheck.versioncheck_recipe:VersionCheckRecipe',
 		],
 		'zc.buildout.uninstall': [

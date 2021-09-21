@@ -2,31 +2,32 @@ import logging
 import os.path
 import re
 import subprocess
-import types
-import zc.buildout
 
+from uttl.buildout.install_recipe import InstallRecipe
 from zc.buildout import UserError
 
-class QtDeployRecipe(object):
+class QtDeployRecipe(InstallRecipe):
 	def __init__(self, buildout, name, options):
-		self.buildout, self.name, self.options = buildout, name, options
-		self.log = logging.getLogger(self.name)
+		super().__init__(buildout, name, options)
 
 		self.options.setdefault('executable', 'windeployqt.exe')
-
-		if not 'vcvars' in self.options:
-			raise UserError('Missing mandatory "vcvars" parameter.')
 
 		if not 'target_path' in self.options:
 			raise UserError('Missing mandatory "target_path" parameter.')
 
-		self.args = [ ]
-		self.args.append(self.options['target_path'])
+		self.args = [ self.options['target_path'] ]
 
 		self.options['args'] = ' '.join(str(e) for e in self.args)
 
 	def install(self):
-		exe_args = [ self.options['vcvars'], 'amd64', '&&', self.options['executable'] ]
+		# build argument list
+
+		exe_args = []
+
+		if 'vcvars' in self.options:
+			exe_args.append([ self.options['vcvars'], 'amd64', '&&' ])
+
+		exe_args.append(self.options['executable'])
 
 		# get list of files
 
