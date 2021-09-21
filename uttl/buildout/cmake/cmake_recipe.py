@@ -40,17 +40,22 @@ class CmakeRecipe:
 		self.options['args'] = ' '.join(str(e) for e in self.args)
 
 	def install(self):
-		self.options.created(self.options['artefact_path'])
-
 		if not os.path.exists(self.options['artefact_path']):
 			if 'configure_path' in self.options:
+				configure_path = os.path.abspath(self.options['configure_path'])
+
+				if not os.path.exists(configure_path):
+					os.makedirs(configure_path, 0o777, True)
+
 				self.working_dir = os.getcwd()
-				os.chdir(os.path.abspath(self.options['configure_path']))
+				os.chdir(configure_path)
 
 			self.runCommand(self.args)
 
 			if 'configure_path' in self.options:
 				os.chdir(self.working_dir)
+
+		self.options.created(self.options['artefact_path'])
 
 		return self.options.created()
 

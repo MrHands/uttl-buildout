@@ -4,7 +4,7 @@ def get_text_from_file(fn):
 	text = open(fn, 'rb').read()
 	return text.decode('utf-8')
 
-setup(name = 'uttl-buildout',
+setup(name = 'uttl.buildout',
 	version = '1.0.0',
 	description = 'Utilities for Buildout developed for Up There They Love.',
 	long_description = '\n\n'.join([
