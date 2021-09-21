@@ -6,7 +6,40 @@
 
   Set this option to 1 to skip checks for missing installed files and always run the script.
 
-``executable`` (default: "cmake")
+``executable`` (default: "windeployqt.exe")
 
+  Path to the executable used to run commands. You don't need to set this if the executable was added to the system-wide ``PATH`` environment variable.
+
+``target`` (default: release)
+
+  Deploy either ``debug`` or ``release`` versions of Qt libraries.
+
+``translations`` (optional)
+
+  List of translated languages to deploy, e.g. fr, uk, de. Leaving this option unspecified will skip deployment of translations.
+
+``compiler-runtime`` (default: 1)
+
+  Disable deployment of ANGLE libraries by setting this option to 0.
+
+``angle`` (default: 1)
+
+  Disable deployment of ANGLE libraries by setting this option to 0.
+
+``opengl-sw`` (default: 1)
+
+  Disable deployment of the OpenGL software rasterizer library by setting this option to 0.
 
 ## Example
+
+	[buildout]
+	parts = deploy
+
+	[deploy]
+	recipe = uttl.buildout:qtdeploy
+	executable = C:\Qt\5.15.2\msvc2019_64\bin\windeployqt.exe
+	translations =
+		uk
+		de
+		fr
+	target_path = C:\Projects\SSSG\build\SSSGRelease.exe

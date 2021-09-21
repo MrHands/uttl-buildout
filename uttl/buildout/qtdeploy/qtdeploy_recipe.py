@@ -15,8 +15,15 @@ class QtDeployRecipe(InstallRecipe):
 		if not 'target_path' in self.options:
 			raise UserError('Missing mandatory "target_path" parameter.')
 
-		self.args = [ self.options['target_path'] ]
+		self.args = [ ]
 
+		if 'translations' in self.options:
+			translations = self.options['translations'].splitlines()
+			self.args.append(','.join(str(t) for t in translations))
+		else:
+			self.args.append('--no-translations')
+
+		self.args.append(self.options['target_path'])
 		self.options['args'] = ' '.join(str(e) for e in self.args)
 
 	def install(self):
@@ -25,7 +32,7 @@ class QtDeployRecipe(InstallRecipe):
 		exe_args = []
 
 		if 'vcvars' in self.options:
-			exe_args.append([ self.options['vcvars'], 'amd64', '&&' ])
+			exe_args += [ self.options['vcvars'], 'amd64', '&&' ]
 
 		exe_args.append(self.options['executable'])
 
@@ -33,7 +40,7 @@ class QtDeployRecipe(InstallRecipe):
 
 		files = []
 
-		args = exe_args + [ '--list', 'target', self.options['target_path'] ]
+		args = exe_args + [ '--list', 'target' ] + self.args
 		self.log.debug(str(args))
 
 		with subprocess.Popen(args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT) as proc:
@@ -49,7 +56,7 @@ class QtDeployRecipe(InstallRecipe):
 
 		# copy files
 
-		args = exe_args + [ self.options['target_path'] ]
+		args = exe_args + self.args
 		self.log.debug(str(args))
 
 		with subprocess.Popen(args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT) as proc:

@@ -12,7 +12,7 @@ The recipe will automatically keep track of files that were generated, including
 
 ``executable`` (default: "cmake")
 
-  Path to the executable used to run CMake commands. You don't need to set this if the executable was added to the system-wide PATH environment variable.
+  Path to the executable used to run commands. You don't need to set this if the executable was added to the system-wide ``PATH`` environment variable.
 
 ``artefact_path`` (optional)
 
