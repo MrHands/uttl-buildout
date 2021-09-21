@@ -8,6 +8,8 @@ class CmakeRecipe:
 		self.buildout, self.name, self.options = buildout, name, options
 		self.log = logging.getLogger(self.name)
 
+		self.match_installed = re.compile(r'.*-- (.+?): (.+)')
+
 		self.args = [ ]
 
 		if 'generator' in self.options:
@@ -75,6 +77,16 @@ class CmakeRecipe:
 
 				if error_check.match(stripped) or build_check.match(stripped):
 					success = False
+
+				# add installed files to options
+
+				match = self.match_installed.match(stripped)
+				if match:
+					what = match.group(1)
+					path = match.group(2)
+
+					if any(what in s for s in ['Installing', 'Up-to-date']):
+						self.options.created(os.path.abspath(path))
 
 				self.log.info(stripped)
 
