@@ -17,10 +17,15 @@ class CmakeRecipe(InstallRecipe):
 			self.args.extend([ '-G', self.options['generator'] ])
 
 		if 'configure_path' in self.options:
-			self.args.append(self.options['configure_path'])
+			self.args.append(os.path.abspath(self.options['configure_path']))
 
-		if 'build_path' in self.options:
-			self.args.extend([ '--build', self.options['build_path'] ])
+		build_path = os.path.abspath(self.options['build_path']) if 'build_path' in self.options else None
+		install_path = os.path.abspath(self.options['install_path']) if 'install_path' in self.options else None
+
+		if build_path:
+			self.args.extend([ '--build', build_path ])
+		elif install_path:
+			self.args.extend([ '--build', install_path ])
 
 		if 'target' in self.options:
 			self.args.extend([ '--target', self.options['target'] ])
@@ -30,8 +35,8 @@ class CmakeRecipe(InstallRecipe):
 
 		# variables
 
-		if 'install_path' in self.options:
-			self.args.append('-DCMAKE_INSTALL_PREFIX=' + os.path.abspath(self.options['install_path']))
+		if install_path:
+			self.args.append('-DCMAKE_INSTALL_PREFIX=' + install_path)
 
 		if 'variables' in self.options:
 			for var in self.options['variables'].splitlines():
@@ -79,19 +84,19 @@ class CmakeRecipe(InstallRecipe):
 
 				# check for errors
 
-				if check_errors.match(stripped) or check_failed.match(stripped):
+				if self.check_errors.match(stripped) or self.check_failed.match(stripped):
 					success = False
 
 				# add artefacts to options
 
-				match = check_artefacts.match(stripped)
+				match = self.check_artefacts.match(stripped)
 				if match:
 					path = match.group(2)
 					self.options.created(os.path.abspath(path))
 
 				# add installed files to options
 
-				match = check_installed.match(stripped)
+				match = self.check_installed.match(stripped)
 				if match:
 					what = match.group(1)
 					path = match.group(2)
