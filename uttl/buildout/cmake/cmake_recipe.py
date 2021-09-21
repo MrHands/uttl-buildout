@@ -2,12 +2,12 @@ import logging
 import os
 import re
 import subprocess
-import types
 
-class CmakeRecipe(object):
+from uttl.buildout.install_recipe import InstallRecipe
+
+class CmakeRecipe(InstallRecipe):
 	def __init__(self, buildout, name, options):
-		self.buildout, self.name, self.options = buildout, name, options
-		self.log = logging.getLogger(self.name)
+		super().__init__(buildout, name, options)
 
 		self.options.setdefault('executable', 'cmake')
 
@@ -68,25 +68,6 @@ class CmakeRecipe(object):
 			self.options.created(os.path.abspath(self.options['artefact_path']))
 
 		return self.options.created()
-
-	def update(self):
-		(installed_part_options, installed_exists) = self.buildout._read_installed_part_options()
-
-		part_options = installed_part_options[self.name]
-		if not part_options:
-			self.log.info('Installing again due to missing options.')
-			return self.install()
-
-		if not '__buildout_installed__' in part_options:
-			self.log.info('No files were installed previously.')
-			return self.install()
-
-		installed = (path.rstrip() for path in part_options['__buildout_installed__'].split())
-		for path in installed:
-			if not os.path.exists(path):
-				self.log.info('Installing again due to missing file.')
-				self.log.debug('MISSING: %s' % (path))
-				return self.install()
 
 	def runCommand(self, args):
 		args = [ self.options['executable'] ] + args
