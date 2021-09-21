@@ -19,16 +19,19 @@ class CmakeRecipe(InstallRecipe):
 		if 'configure_path' in self.options:
 			self.args.append(os.path.abspath(self.options['configure_path']))
 
-		build_path = os.path.abspath(self.options['build_path']) if 'build_path' in self.options else None
-		install_path = os.path.abspath(self.options['install_path']) if 'install_path' in self.options else None
+		install_path = None
+		build_path = None
 
-		if build_path:
+		if 'build_path' in self.options:
+			build_path = os.path.abspath(self.options['build_path'])
 			self.args.extend([ '--build', build_path ])
-		elif install_path:
+		elif 'install_path' in self.options:
+			install_path = os.path.abspath(self.options['install_path'])
 			self.args.extend([ '--build', install_path ])
 
 		if 'target' in self.options:
-			self.args.extend([ '--target', self.options['target'] ])
+			targets = self.options['target'].splitlines()
+			self.args.extend([ '--target', ' '.join(str(t) for t in targets) ])
 
 		if 'config' in self.options:
 			self.args.extend([ '--config', self.options['config'] ])
