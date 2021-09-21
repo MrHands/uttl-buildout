@@ -16,7 +16,7 @@
 
 ``target`` (default: release)
 
-  Deploy either ``debug`` or ``release`` versions of Qt libraries.
+  Deploy either ``debug`` or ``release`` versions of Qt libraries. The debug target will also deploy .pdb files which are used when debugging using Visual Studio.
 
 ``vcvars`` (optional)
 

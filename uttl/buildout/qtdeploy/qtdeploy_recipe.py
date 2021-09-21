@@ -11,8 +11,17 @@ class QtDeployRecipe(InstallRecipe):
 		super().__init__(buildout, name, options)
 
 		self.options.setdefault('executable', 'windeployqt.exe')
+		self.options.setdefault('target', 'release')
 
 		self.args = [ ]
+
+		# target
+
+		if self.options['target'] == 'debug':
+			self.args.append('--debug')
+			self.args.append('--pdb')
+		else:
+			self.args.append('--release')
 
 		# translations
 
