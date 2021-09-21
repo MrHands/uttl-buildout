@@ -18,6 +18,10 @@
 
   Deploy either ``debug`` or ``release`` versions of Qt libraries.
 
+``vcvars`` (optional)
+
+  Path to ``vcvarsall.bat``, a script file used to determine the install path of Visual Studio. Only required if you want to deploy the Visual Runtime C++ installer.
+
 ``translations`` (optional)
 
   List of translated languages to deploy, e.g. fr, uk, de. Leaving this option unspecified will skip deployment of translations.
