@@ -50,6 +50,8 @@ class InklecateRecipe(InstallRecipe):
 			if not self.runCommand(args):
 				raise CalledProcessError(0, args)
 
+			self.log.info('Compiled ink to "%s.json".' % filename)
+
 		return self.options.created()
 
 	def runCommand(self, args):
