@@ -44,16 +44,21 @@ class CmakeRecipe(InstallRecipe):
 
 		if 'install_path' in self.options:
 			install_path = os.path.abspath(self.options['install_path'])
-			self.var_args.append('-DCMAKE_INSTALL_PREFIX=%s' % (install_path))
+			self.var_args.append('-DCMAKE_INSTALL_PREFIX=%s' % (os.path.abspath(install_path)))
+
+		for var in [var for var in list(self.options.keys()) if var.startswith('var_')]:
+			# var_([^\:]+):?(\w*)\s*=\s*(.+)
+			self.var_args.append('-D%s:PATH=%s' % (var, os.path.abspath(self.options[var])))
 
 		if 'variables' in self.options:
 			for var in self.options['variables'].splitlines():
 				self.var_args.append('-D%s' % (var))
 
-		if 'configure_path' in self.options:
-			self.var_args.append(os.path.abspath(self.options['configure_path']))
-		elif 'build_path' in self.options:
-			self.var_args.append(os.path.abspath(self.options['build_path']))
+		if len(self.var_args) > 0:
+			if 'configure_path' in self.options:
+				self.var_args.append(os.path.abspath(self.options['configure_path']))
+			elif 'build_path' in self.options:
+				self.var_args.append(os.path.abspath(self.options['build_path']))
 
 		self.options['var_args'] = ' '.join(str(e) for e in self.args)
 
