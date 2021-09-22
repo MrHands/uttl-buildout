@@ -49,6 +49,8 @@ class InstallRecipe(BaseRecipe):
 
 			proc.communicate()
 
+			self.log.debug('returned %d' % (proc.returncode))
+
 			if proc.returncode != expected:
 				raise CalledProcessError(0, args)
 

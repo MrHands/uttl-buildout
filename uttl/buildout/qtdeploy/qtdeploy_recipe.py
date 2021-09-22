@@ -1,4 +1,3 @@
-import logging
 import os.path
 import re
 import subprocess
@@ -113,6 +112,8 @@ class QtDeployRecipe(InstallRecipe):
 
 		if drive != '':
 			self.files.append(path)
+
+		return True
 
 def uninstall(name, options):
 	pass

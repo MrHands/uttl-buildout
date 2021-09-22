@@ -24,15 +24,15 @@ Specifies the generator used by CMake when configuring the build environment, e.
 
 ``configure_path`` (optional)
 
-Path for the output of the CMake configure step. When you are e.g. generating a Visual Studio solution then this is the path where it will be generated to. If the path is not specified it will default to the ``build_path``.
+Outputs the CMake configure step to the specified directory. For example, when you want to generate a Visual Studio solution then this is the folder where it will be generated to.
 
 ``build_path`` (optional)
 
-Builds the ``CMakeList.txt`` project at the specified path.
+Builds the ``CMakeList.txt`` configuration at the specified path, which will output files to the directory specified with the configure step.
 
 ``install_path`` (optional)
 
-Synonym for ``build_path`` with the caveat that it will also set the variable ``CMAKE_INSTALL_PREFIX`` to this path.
+Sets the variable ``CMAKE_INSTALL_PREFIX`` to this path.
 
 ``target`` (optional)
 
