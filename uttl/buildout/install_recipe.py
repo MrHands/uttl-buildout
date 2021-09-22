@@ -1,5 +1,7 @@
 import os
+import subprocess
 
+from subprocess import CalledProcessError
 from uttl.buildout.base_recipe import BaseRecipe
 
 class InstallRecipe(BaseRecipe):
@@ -29,3 +31,25 @@ class InstallRecipe(BaseRecipe):
 				self.log.info('Installing again due to missing file.')
 				self.log.debug('MISSING: %s' % (path))
 				return self.install()
+
+	def runCommand(self, args, parseLine=lambda line: True, quiet=False, expected=0):
+		success = True
+
+		self.log.debug(str(args))
+
+		with subprocess.Popen(args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT) as proc:
+			for line in iter(proc.stdout.readline, b''):
+				stripped = line.rstrip().decode('UTF-8')
+
+				if not quiet:
+					self.log.info(stripped)
+
+				if not parseLine(stripped):
+					success = False
+
+			proc.communicate()
+
+			if proc.returncode != expected:
+				raise CalledProcessError(0, args)
+
+		return success

@@ -1,4 +1,3 @@
-from zc.buildout import UserError
 import glob
 import os
 import re
@@ -47,23 +46,11 @@ class InklecateRecipe(InstallRecipe):
 			args.extend([ '-o', artefact_path ])
 			args.extend([ input_path ])
 
-			if not self.runCommand(args):
-				raise CalledProcessError(0, args)
+			self.runCommand(args)
 
 			self.log.info('Compiled ink to "%s.json".' % filename)
 
 		return self.options.created()
-
-	def runCommand(self, args):
-		self.log.debug(str(args))
-
-		with subprocess.Popen(args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT) as proc:
-			for line in iter(proc.stdout.readline, b''):
-				self.log.info(line.rstrip().decode('UTF-8'))
-
-			proc.communicate()
-
-			return proc.returncode == 0
 
 def uninstall(name, options):
 	pass
