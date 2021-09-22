@@ -36,21 +36,36 @@ class CmakeRecipe(InstallRecipe):
 			if 'config' in self.options:
 				self.args.extend([ '--config', self.options['config'] ])
 
+		self.options['args'] = ' '.join(str(e) for e in self.args)
+
 		# variables
+
+		self.var_args = []
 
 		if 'install_path' in self.options:
 			install_path = os.path.abspath(self.options['install_path'])
-			self.args.extend(['-D', 'CMAKE_INSTALL_PREFIX="%s"' % (install_path)])
+			self.var_args.append('-DCMAKE_INSTALL_PREFIX=%s' % (install_path))
 
 		if 'variables' in self.options:
 			for var in self.options['variables'].splitlines():
-				self.args.extend(['-D', var])
+				self.var_args.append('-D%s' % (var))
 
-		# path
+		if 'configure_path' in self.options:
+			self.var_args.append(os.path.abspath(self.options['configure_path']))
+		elif 'build_path' in self.options:
+			self.var_args.append(os.path.abspath(self.options['build_path']))
 
-		self.options['args'] = ' '.join(str(e) for e in self.args)
+		self.options['var_args'] = ' '.join(str(e) for e in self.args)
 
 	def install(self):
+		# set variables
+
+		if len(self.var_args) > 0:
+			args = [ self.options['executable'] ] + self.var_args
+			self.runCommand(args, parseLine=self.parseLine)
+
+		# set working directory
+
 		if 'configure_path' in self.options:
 			configure_path = os.path.abspath(self.options['configure_path'])
 
