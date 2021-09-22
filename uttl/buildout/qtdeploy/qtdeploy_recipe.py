@@ -90,43 +90,29 @@ class QtDeployRecipe(InstallRecipe):
 
 		# get list of files
 
-		files = []
+		self.files = []
 
 		args = exe_args + [ '--list', 'target' ] + self.args
-		self.log.debug(str(args))
-
-		with subprocess.Popen(args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT) as proc:
-			for line in iter(proc.stdout.readline, b''):
-				path = line.rstrip().decode('UTF-8')
-
-				drive, tail = os.path.splitdrive(path)
-
-				if drive != '':
-					files.append(path)
-
-			proc.communicate()
+		self.runCommand(args, parseLine=self.parseFileList, quiet=True)
 
 		# copy files
 
 		args = exe_args + self.args
-		self.log.debug(str(args))
-
-		with subprocess.Popen(args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT) as proc:
-			for line in iter(proc.stdout.readline, b''):
-				self.log.info(line.rstrip().decode('UTF-8'))
-
-			proc.communicate()
+		self.runCommand(args)
 
 		# check if files have been copied
 
-		copied = [f for f in files if os.path.exists(f)]
+		copied = [f for f in self.files if os.path.exists(f)]
 		for f in copied:
 			self.options.created(f)
 
 		return self.options.created()
 
-	def update(self):
-		pass
+	def parseFileList(self, path):
+		drive, tail = os.path.splitdrive(path)
+
+		if drive != '':
+			self.files.append(path)
 
 def uninstall(name, options):
 	pass
