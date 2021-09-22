@@ -37,17 +37,17 @@ Add `uttl.buildout` to the `extensions` entry in your `[buildout]` section:
 
 # Recipes
 
-The following scripts for buildout (recipes) come in this package:
+The following recipes (scripts) for buildout are available in this package:
 
-* `uttl.buildout.cmake`
+* [uttl.buildout.cmake](uttl/buildout/cmake/README.md) - CMake commands
 * `uttl.buildout.copyfile`
 * `uttl.buildout.devenv`
 * `uttl.buildout.inklecate`
 * `uttl.buildout.qmake`
-* `uttl.buildout.qtdeploy`
+* * [uttl.buildout.qtdeploy](uttl/buildout/qtdeploy/README.md) - Deploy Qt libraries
 * `uttl.buildout.versioncheck`
 
-Check out the source folders for detailed documentation about each command.
+Check the source folders for detailed documentation about each command.
 
 # VersionCheck
 

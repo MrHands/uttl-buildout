@@ -6,7 +6,7 @@ The recipe will automatically keep track of files that were generated, including
 
 ## Configuration Options
 
-``always_build`` (optional)
+``always_install`` (optional)
 
   Set this option to 1 to skip checks for missing installed files and always run the script.
 

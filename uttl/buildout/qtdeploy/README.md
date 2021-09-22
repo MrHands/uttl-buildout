@@ -1,18 +1,22 @@
 # uttl.buildout.qtdeploy
 
+Calls a deployment tool for Qt that copies library files needed to run the target executable. The libraries will be copied from the folder where the deployment tool is located, i.e. your Qt installation folder.
+
+The recipe will automatically track the copied files and only copy them
+
 ## Configuration 
+
+``executable`` (default: "windeployqt.exe")
+
+  Path to the executable used to run commands. You don't need to set this if the executable was added to the system-wide ``PATH`` environment variable.
 
 ``target_path`` (mandatory)
 
   Path to the executable that the Qt deployment tool will inspect for dependencies.
 
-``always_build`` (optional)
+``always_install`` (optional)
 
   Set this option to 1 to skip checks for missing installed files and always run the script.
-
-``executable`` (default: "windeployqt.exe")
-
-  Path to the executable used to run commands. You don't need to set this if the executable was added to the system-wide ``PATH`` environment variable.
 
 ``target`` (default: release)
 
@@ -20,11 +24,11 @@
 
 ``vcvars`` (optional)
 
-  Path to ``vcvarsall.bat``, a script file used to determine the install path of Visual Studio. Only required if you want to deploy the Visual Runtime C++ installer.
+  Path to ``vcvarsall.bat``, a script file used to determine the install path of Visual Studio. Only required if you want to deploy the installer for the relevant version of the Visual C++ runtime.
 
 ``translations`` (optional)
 
-  List of translated languages to deploy, e.g. fr, uk, de. Leaving this option unspecified will skip deployment of translations.
+  List of translated languages to deploy, e.g. fr, uk, de. Leaving this option blank will skip deployment of translations.
 
 ``compiler_runtime`` (optional)
 
@@ -58,8 +62,9 @@
 	[deploy]
 	recipe = uttl.buildout:qtdeploy
 	executable = C:\Qt\5.15.2\msvc2019_64\bin\windeployqt.exe
+	target_path = C:\Projects\SSSG\build\SSSGRelease.exe
 	translations =
 		uk
 		de
 		fr
-	target_path = C:\Projects\SSSG\build\SSSGRelease.exe
+	virtual_keyboard = 0
