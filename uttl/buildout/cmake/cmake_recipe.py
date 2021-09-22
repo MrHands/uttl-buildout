@@ -62,7 +62,7 @@ class CmakeRecipe(InstallRecipe):
 
 		if len(self.var_args) > 0:
 			args = [ self.options['executable'] ] + self.var_args
-			self.runCommand(args, parseLine=self.parseLine)
+			self.runCommand(args, parseLine=self.parseLine, quiet=True)
 
 		# set working directory
 
