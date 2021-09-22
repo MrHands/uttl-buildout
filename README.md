@@ -42,9 +42,9 @@ The following recipes (scripts) for buildout are available in this package:
 * [uttl.buildout.cmake](uttl/buildout/cmake/README.md) - CMake commands
 * `uttl.buildout.copyfile`
 * `uttl.buildout.devenv`
-* * [uttl.buildout.inklecate](uttl/buildout/inklecate/README.md) - Compile .ink files for narrative
+* [uttl.buildout.inklecate](uttl/buildout/inklecate/README.md) - Compile .ink files for narrative
 * `uttl.buildout.qmake`
-* * [uttl.buildout.qtdeploy](uttl/buildout/qtdeploy/README.md) - Deploy Qt libraries
+* [uttl.buildout.qtdeploy](uttl/buildout/qtdeploy/README.md) - Deploy Qt libraries
 * `uttl.buildout.versioncheck`
 
 Check the source folders for detailed documentation about each command.
