@@ -10,10 +10,6 @@ class QmakeRecipe(InstallRecipe):
 	def __init__(self, buildout, name, options):
 		super().__init__(buildout, name, options, executable='qmake')
 
-		self.files = self.options['files'].splitlines()
-		if not self.files:
-			raise UserError('Missing mandatory "files" parameter.')
-
 		self.args = [ ]
 
 		if 'template' in self.options:
@@ -28,6 +24,13 @@ class QmakeRecipe(InstallRecipe):
 		if 'artefact_path' in self.options:
 			self.args.extend([ '-o', self.options['artefact_path'] ])
 
+		# add file list
+
+		if 'files' in self.options:
+			raise UserError('Missing mandatory "files" parameter.')
+
+		self.args.extend(self.options['files'].splitlines())
+
 		self.options['args'] = ' '.join(str(e) for e in self.args)
 
 	def install(self):
@@ -40,9 +43,7 @@ class QmakeRecipe(InstallRecipe):
 		else:
 			prefix_args = []
 
-		args = self.args + self.files
-
-		self.runCommand(args, prefixArgs=prefix_args, parseLine=self.parseLine)
+		self.runCommand(self.args, prefixArgs=prefix_args, parseLine=self.parseLine)
 
 		return self.options.created()
 

@@ -39,11 +39,11 @@ Add `uttl.buildout` to the `extensions` entry in your `[buildout]` section:
 
 The following recipes (scripts) for buildout are available in this package:
 
-* [uttl.buildout.cmake](uttl/buildout/cmake/README.md) - CMake commands
+* [uttl.buildout.cmake](uttl/buildout/cmake/README.md) - Run CMake commands
 * `uttl.buildout.copyfile`
 * `uttl.buildout.devenv`
-* [uttl.buildout.inklecate](uttl/buildout/inklecate/README.md) - Compile .ink files for narrative
-* `uttl.buildout.qmake`
+* [uttl.buildout.inklecate](uttl/buildout/inklecate/README.md) - Compile .ink files to JSON
+* [uttl.buildout.qmake](uttl/buildout/qmake/README.md) - Run QMake commands
 * [uttl.buildout.qtdeploy](uttl/buildout/qtdeploy/README.md) - Deploy Qt libraries
 * [uttl.buildout.versioncheck](uttl/buildout/versioncheck/README.md) - Check installed version for executables
 
