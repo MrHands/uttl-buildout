@@ -1,52 +1,54 @@
 # uttl.buildout.versioncheck
 
-Recipe for finding the path to an executable and checking its version against a required one using a Python function.
+Finds the path to an installed executable and checks whether its semantic version number meets the required major and minor version number.
 
-The resulting path and version number is written to an ini file in the `parts` directory. The script function is called if the ini file does not exist. The output of the found version information is checked against the values stored in the cache during the `install` phase of the recipe. VersionCheck will always fail if the requested version cannot be found.
+You will need to write a custom script function that retrieves a version number for the executable you are looking for. This means that the recipe is not limited to a specific type of executable. As long as you can compare version numbers, you can use it to get to path to anything installed on the system.
+
+The recipe will fail and throw an error if the installed version is lower than the required one.
+
+Semantic versioning means that you have a major, minor, and debug version number for an executable that is written as `<major>.<minor>.<debug>`. Most applications use this scheme, or something similar, but not all.
+
+Even when a semantic version does not exist you can still create your own. For example, you can say that the semantic version number for a version of Visual Studio is `2017.15.64`. 2017 is the major version of the program, but it's known internally as version 15 (minor) and you want the 64-bit version (debug).
+
+The path to the executable and its version number are cached in a .ini file in the `\parts` directory.
 
 ## Configuration
 
-``body`` (required)
+`body` (required)
 
-Python script function that is ran to get the path to an executable. Lines of the function must be prefixed with `...`. The function must always return a tuple of values in this format: (Success (`True` or `False`), MajorVersion (`int`), MinorVersion (`int`), DebugVersion (`int`), Path (`string`)).
+Script function written in Python that is run to get the path to an executable. Lines of the function must be prefixed with `...` and must always return a tuple of values in this format: (Success (`True` or `False`), MajorVersion (`int`), MinorVersion (`int`), DebugVersion (`int`), Path (`string`)). The function can reference any option defined in the configuration using `self.options` and can write messages to the log using `self.log`.
 
-``required_major`` (default: 0)
+`required_major` (default: 0)
 
 Minimum requirement for the major version of the executable. Can be 0.
 
-``required_minor`` (default: 0)
+`required_minor` (default: 0)
 
 Minimum requirement for the minor version of the executable. Can be 0.
 
-``required_debug`` (default: 0)
+`version_file` (default: "<name>.ini")
 
-Minimum requirement for the debug version of the executable. Not taken into consideration when comparing versions.
-
-``version_file`` (default: "<name>.ini")
-
-Override for the name of the ini file in the parts directory.
+Name for the .ini cache file in the `\parts` directory. Will default to the name of the buildout section.
 
 ## Outputs
 
-``path``
+`path`
 
-  Path to the found executable.
+Path to the found executable.
 
-``version_major``
+`version_major`
 
-  Major version number of the executable.
+Major version number of the executable.
 
-``version_minor``
+`version_minor`
 
-  Minor version number of the executable.
+Minor version number of the executable.
 
-``version_debug``
+`version_debug`
 
-  Debug version number of the executable.
+Debug version number of the executable.
 
-## Example
-
-Using `vswhere.exe` to get the path to Visual Studio 2017 (version 15):
+## Example - Get the path to Visual Studio 2017
 
     [visual-studio]
     recipe = uttl.buildout:versioncheck

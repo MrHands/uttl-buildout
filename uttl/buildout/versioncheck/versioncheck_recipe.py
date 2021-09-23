@@ -54,9 +54,9 @@ class VersionCheckRecipe(BaseRecipe):
 		self.log.debug('path %s version %s.%s.%s' % (self.options['path'], self.options['version_major'], self.options['version_minor'], self.options['version_debug']))
 
 	def install(self):
-		self.options.created(self.version_file)
-
 		# read or create version object
+
+		self.options.created(self.version_file)
 
 		self.version = configparser.ConfigParser()
 		if os.path.exists(self.version_file):
@@ -68,17 +68,35 @@ class VersionCheckRecipe(BaseRecipe):
 				'debug': '0'
 			}
 
+		# version check
+
+		installed = [
+			int(self.options['version_major']),
+			int(self.options['version_minor']),
+			int(self.options['version_debug'])
+		]
+		cached = [
+			int(self.version['version']['major']),
+			int(self.version['version']['minor']),
+			int(self.version['version']['debug']),
+		]
+		required = [
+			int(self.options['required_major']),
+			int(self.options['required_minor'])
+		]
+
 		# check for newer version
 
-		if int(self.options['version_major']) > int(self.version['version']['major']) or int(self.options['version_minor']) > int(self.version['version']['minor']) or int(self.options['version_debug']) > int(self.version['version']['debug']):
-			version_old = '%s.%s.%s' % (self.version['version']['major'], self.version['version']['minor'], self.version['version']['debug'])
-			version_new = '%s.%s.%s' % (self.options['version_major'], self.options['version_minor'], self.options['version_debug'])
-			self.log.info('Found newer version: %s > %s' % (version_old, version_new))
+		if installed[0] > cached[0] or installed[1] > cached[1] or installed[2] > cached[2]:
+			self.log.info('Found new version: %d.%d.%d != %d.%d.%d' % (
+				installed[0], installed[1], installed[2],
+				cached[0], cached[1], cached[2])
+			)
 
 			self.version['version'] = {
-				'major': self.options['version_major'],
-				'minor': self.options['version_minor'],
-				'debug': self.options['version_debug']
+				'major': str(installed[0]),
+				'minor': str(installed[1]),
+				'debug': str(installed[2])
 			}
 			self.version['location'] = {
 				'path': self.options['path']
@@ -89,12 +107,11 @@ class VersionCheckRecipe(BaseRecipe):
 
 		# check version against required
 
-		if int(self.version['version']['major']) < int(self.options['required_major']) or int(self.version['version']['minor']) < int(self.options['required_minor']):
-			self.log.error('Dependency at %s.%s is out of date, >= %d.%d is required' % (
-				int(self.version['version']['major']),
-				int(self.version['version']['minor']),
-				int(self.options['required_major']),
-				int(self.options['required_minor'])))
+		if installed[0] < required[0] or installed[1] < required[1]:
+			self.log.error('Dependency at %d.%d.%d is out of date, >= %d.%d is required' % (
+				installed[0], installed[1], installed[2]
+				required[0], required[1]))
+
 			raise UserError('Version mismatch')
 
 		return self.options.created()
