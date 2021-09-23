@@ -77,3 +77,48 @@ Debug version number of the executable.
         ...   return (False, 0, 0, 0, '')
         ...
         ... return (True, self.options['required_major'], self.options['required_minor'], 64, path)
+
+## Example - Find CMake and set the generator to Visual Studio 2017
+
+	[cmake]
+	recipe = uttl.buildout:versioncheck
+	required_major = 3
+	required_minor = 19
+	generator = Visual Studio ${visual-studio:version_minor} ${visual-studio:version_major} Win${visual-studio:version_debug}
+	body = ... import winreg
+		...
+		... try:
+		...   key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r'SOFTWARE\Kitware\CMake', 0, winreg.KEY_READ)
+		...   installed = winreg.QueryValueEx(key, 'installed')
+		... except OSError:
+		...   self.log.error('CMake is not installed.')
+		...   return (False, 0, 0, 0, '')
+		...  
+		... if installed[0] != 1:
+		...   self.log.error('CMake is not installed.')
+		...   return (False, 0, 0, 0, '')
+		...
+		... version_full = None
+		...
+		... try:
+		...   p = subprocess.Popen([ 'cmake', '--version' ], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		... except FileNotFoundError:
+		...   self.log.error('CMake was not added to the global path environment variable.')
+		...   return (False, 0, 0, 0, '')
+		...
+		... for line in iter(p.stdout.readline, b''):
+		...   match = re.match('.*version ([0-9]+\\.[0-9]+\\.[0-9]+)', str(line))
+		...   if match:
+		...     version_full = match.group(1)
+		...     break
+		...
+		... if not version_full:
+		...   self.log.error('Failed to determine CMake version.')
+		...   return (False, 0, 0, 0, '')
+		...
+		... match = re.match(r'([0-9]+)\.([0-9]+)\.([0-9]+)', version_full)
+		... if not match:
+		...   self.log.error('Incorrect format for version: "%s".' % (version_full))
+		...   return (False, 0, 0, 0, '')
+		...
+		... return (True, match.group(1), match.group(2), match.group(3), 'cmake')

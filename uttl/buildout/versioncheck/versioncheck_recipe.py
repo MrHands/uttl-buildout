@@ -109,7 +109,7 @@ class VersionCheckRecipe(BaseRecipe):
 
 		if installed[0] < required[0] or installed[1] < required[1]:
 			self.log.error('Dependency at %d.%d.%d is out of date, >= %d.%d is required' % (
-				installed[0], installed[1], installed[2]
+				installed[0], installed[1], installed[2],
 				required[0], required[1]))
 
 			raise UserError('Version mismatch')
