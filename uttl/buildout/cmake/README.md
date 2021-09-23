@@ -81,7 +81,7 @@ Every option that starts with `var_` is interpreted as a variable that needs to 
 
 ## Example - Cloning and compiling SDL_image, which depends on SDL2
 
-	# clones using the slapos.recipe.build:gitclone recipe
+	# clone from github using the slapos.recipe.build:gitclone recipe
 
 	[sdl-image-master]
 	recipe = slapos.recipe.build:gitclone
@@ -90,7 +90,7 @@ Every option that starts with `var_` is interpreted as a variable that needs to 
 	develop = true
 	repository = https://github.com/libsdl-org/SDL_image.git
 
-	# configures cmake and sets up required variables
+	# configure cmake and sets up required variables
 
 	[sdl-image-solution]
 	recipe = uttl.buildout:cmake

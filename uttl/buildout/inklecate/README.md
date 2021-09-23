@@ -4,23 +4,23 @@ Calls the Inklecate compiler executable to compile .ink files into .json files.
 
 ## Configuration 
 
-``executable`` (default: "inklecate.exe")
+`executable` (default: "inklecate.exe")
 
-Path to the executable used to run commands. You don't need to set this if the executable was added to the system-wide ``PATH`` environment variable.
+Path to the executable used to run commands. You don't need to set this if the executable was added to the system-wide `PATH` environment variable.
 
-``always_install`` (optional)
+`always_install` (optional)
 
 Set this option to 1 to skip checks for missing installed files and always run the script.
 
-``output_directory`` (optional)
+`output_directory` (optional)
 
 Directory where the  Defaults to the current directory.
 
-``input`` (mandatory)
+`input` (mandatory)
 
 List of .ink files to compile using Inklecate.
 
-## Example
+## Example - Build narrative source files to JSON using inklecate
 
 	[buildout]
 	parts = ink
