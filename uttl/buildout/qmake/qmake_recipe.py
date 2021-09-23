@@ -1,20 +1,16 @@
-from zc.buildout import UserError
-from subprocess import CalledProcessError
-
 import logging
 import os
 import re
 import subprocess
 
-class QmakeRecipe(object):
+from uttl.buildout.install_recipe import InstallRecipe
+from zc.buildout import UserError
+
+class QmakeRecipe(InstallRecipe):
 	def __init__(self, buildout, name, options):
-		self.buildout, self.name, self.options = buildout, name, options
-		self.log = logging.getLogger(self.name)
+		super().__init__(buildout, name, options)
 
 		self.options.setdefault('executable', 'qmake')
-
-		if not 'vcvars' in self.options:
-			raise UserError('Missing mandatory "vcvars" parameter.')
 
 		self.files = self.options['files'].splitlines()
 		if not self.files:
@@ -39,27 +35,20 @@ class QmakeRecipe(object):
 	def install(self):
 		self.options.created(self.options['artefact_path'])
 
-		if not os.path.exists(self.options['artefact_path']):
-			if not self.runCommand(self.args):
-				return CalledProcessError
+		# build argument list
+
+		if 'vcvars' in self.options:
+			args = [ self.options['vcvars'], 'amd64', '&&' ]
+		else:
+			args = []
+
+		args.append(self.options['executable'])
+		args += self.args
+		args += self.files
+
+		self.runCommand(args)
 
 		return self.options.created()
-
-	update = install
-
-	def runCommand(self, args):
-		args = [ self.options['vcvars'], 'amd64', '&&', self.options['executable'] ] + args
-		args.extend(self.files)
-
-		self.log.debug(str(args))
-
-		with subprocess.Popen(args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT) as proc:
-			for line in iter(proc.stdout.readline, b''):
-				self.log.info(line.rstrip().decode('UTF-8'))
-
-			proc.communicate()
-
-			return proc.returncode == 0
 
 def uninstall(name, options):
 	pass
