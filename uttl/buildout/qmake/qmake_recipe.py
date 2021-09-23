@@ -46,9 +46,16 @@ class QmakeRecipe(InstallRecipe):
 		args += self.args
 		args += self.files
 
-		self.runCommand(args)
+		self.runCommand(args, parseLine = self.parseLine)
 
 		return self.options.created()
+
+	check_errors = re.compile(r'.*ERROR:\s*(.*)')
+
+	def parseLine(self, line):
+		# check for errors
+
+		return not self.check_errors.match(line)
 
 def uninstall(name, options):
 	pass
