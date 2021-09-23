@@ -9,7 +9,7 @@ class InstallRecipe(BaseRecipe):
 		super().__init__(buildout, name, options)
 
 	def update(self):
-		if 'always_install' in self.options:
+		if 'always_install' in self.options and self.options['always_install'] == '1':
 			return self.install()
 
 		# use private api to check for files that need to be installed

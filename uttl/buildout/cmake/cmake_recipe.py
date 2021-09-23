@@ -84,12 +84,15 @@ class CmakeRecipe(InstallRecipe):
 			self.log.debug(arg)
 
 		if len(self.var_args) > 0:
+			if not 'generator' in self.options:
+				raise UserError('Missing mandatory "generator" parameter.')
+
+			self.var_args += [ '-G', self.options['generator'] ]
+
 			if not 'install_path' in self.options:
 				raise UserError('Missing mandatory "install_path" parameter.')
 
 			self.var_args.append(os.path.abspath(self.options['install_path']))
-
-		self.options['var_args'] = ' '.join(str(e) for e in self.args)
 
 	def install(self):
 		self.working_dir = os.getcwd()
@@ -108,10 +111,7 @@ class CmakeRecipe(InstallRecipe):
 		# set variables
 
 		if len(self.var_args) > 0:
-			args = [ self.options['executable'] ]
-			args += [ '-G', self.options['generator'] ]
-			args += self.var_args
-
+			args = [ self.options['executable'] ] + self.var_args
 			self.runCommand(args, parseLine=self.parseLine, quiet=True)
 
 		# run command
