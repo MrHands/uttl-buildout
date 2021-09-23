@@ -44,15 +44,39 @@ class CmakeRecipe(InstallRecipe):
 
 		if 'install_path' in self.options:
 			install_path = os.path.abspath(self.options['install_path'])
-			self.var_args.append('-DCMAKE_INSTALL_PREFIX=%s' % (os.path.abspath(install_path)))
+			self.options['var_CMAKE_INSTALL_PREFIX'] = os.path.abspath(install_path) + ':PATH'
+
+		split_name = re.compile(r'var_(.+)')
+		split_type = re.compile(r'(.+):(\w*)$')
 
 		for var in [var for var in list(self.options.keys()) if var.startswith('var_')]:
-			# var_([^\:]+):?(\w*)\s*=\s*(.+)
-			self.var_args.append('-D%s:PATH=%s' % (var, os.path.abspath(self.options[var])))
+			# get name
 
-		if 'variables' in self.options:
-			for var in self.options['variables'].splitlines():
-				self.var_args.append('-D%s' % (var))
+			match = split_name.match(var)
+			if not match:
+				raise UserError('Failed to split variable name for "%s".' % (var))
+
+			var_name = match.group(1)
+
+			# get type and value
+
+			var_value = self.options[var]
+
+			match = split_type.match(var_value)
+			if match:
+				var_value = match.group(1)
+				var_type = match.group(2)
+			else:
+				var_value = var_value
+				var_type = 'STRING'
+
+			if not any(var_type in t for t in ['BOOL', 'FILEPATH', 'PATH', 'STRING', 'INTERNAL']):
+				raise UserError('Invalid variable type "%s" for "%s".' % (var_type, var))
+
+			arg = '-D%s:%s=%s' % (var_name, var_type, var_value)
+			self.var_args.append(arg)
+
+			self.log.debug(arg)
 
 		if len(self.var_args) > 0:
 			if 'configure_path' in self.options:
