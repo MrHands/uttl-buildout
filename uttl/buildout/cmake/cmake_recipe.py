@@ -87,10 +87,13 @@ class CmakeRecipe(InstallRecipe):
 
 			self.var_args += [ '-G', self.options['generator'] ]
 
+			if not 'configure_path' in self.options:
+				raise UserError('Missing mandatory "configure_path" parameter.')
+
 			if not 'install_path' in self.options:
 				raise UserError('Missing mandatory "install_path" parameter.')
 
-			self.var_args.append(os.path.abspath(self.options['install_path']))
+			self.var_args.append(os.path.abspath(self.options['configure_path']))
 
 	def install(self):
 		self.working_dir = os.getcwd()
