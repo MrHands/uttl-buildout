@@ -7,9 +7,8 @@ from zc.buildout import UserError
 
 class QtDeployRecipe(InstallRecipe):
 	def __init__(self, buildout, name, options):
-		super().__init__(buildout, name, options)
+		super().__init__(buildout, name, options, executable='windeployqt.exe')
 
-		self.options.setdefault('executable', 'windeployqt.exe')
 		self.options.setdefault('target', 'release')
 
 		self.args = [ ]
@@ -80,24 +79,21 @@ class QtDeployRecipe(InstallRecipe):
 	def install(self):
 		# build argument list
 
-		exe_args = []
-
 		if 'vcvars' in self.options:
-			exe_args += [ self.options['vcvars'], 'amd64', '&&' ]
-
-		exe_args.append(self.options['executable'])
+			prefix_args = [ self.options['vcvars'], 'amd64', '&&' ]
+		else:
+			prefix_args = []
 
 		# get list of files
 
 		self.files = []
 
-		args = exe_args + [ '--list', 'target' ] + self.args
-		self.runCommand(args, parseLine=self.parseFileList, quiet=True)
+		args = [ '--list', 'target' ] + self.args
+		self.runCommand(args, prefixArgs=prefix_args, parseLine=self.parseFileList, quiet=True)
 
 		# copy files
 
-		args = exe_args + self.args
-		self.runCommand(args)
+		self.runCommand(self.args, prefixArgs=prefix_args)
 
 		# check if files have been copied
 

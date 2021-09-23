@@ -8,9 +8,7 @@ from zc.buildout import UserError
 
 class CmakeRecipe(InstallRecipe):
 	def __init__(self, buildout, name, options):
-		super().__init__(buildout, name, options)
-
-		self.options.setdefault('executable', 'cmake')
+		super().__init__(buildout, name, options, executable='cmake')
 
 		self.args = [ ]
 
@@ -111,13 +109,11 @@ class CmakeRecipe(InstallRecipe):
 		# set variables
 
 		if len(self.var_args) > 0:
-			args = [ self.options['executable'] ] + self.var_args
-			self.runCommand(args, parseLine=self.parseLine, quiet=True)
+			self.runCommand(self.var_args, parseLine=self.parseLine, quiet=True)
 
 		# run command
 
-		args = [ self.options['executable'] ] + self.args
-		self.runCommand(args, parseLine=self.parseLine)
+		self.runCommand(self.args, parseLine=self.parseLine)
 
 		# back to working directory
 

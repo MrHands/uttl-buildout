@@ -3,10 +3,13 @@ import subprocess
 
 from subprocess import CalledProcessError
 from uttl.buildout.base_recipe import BaseRecipe
+from zc.buildout import UserError
 
 class InstallRecipe(BaseRecipe):
-	def __init__(self, buildout, name, options):
+	def __init__(self, buildout, name, options, executable=''):
 		super().__init__(buildout, name, options)
+
+		self.options.setdefault('executable', executable)
 
 	def update(self):
 		if 'always_install' in self.options and self.options['always_install'] == '1':
@@ -32,26 +35,31 @@ class InstallRecipe(BaseRecipe):
 				self.log.debug('MISSING: %s' % (path))
 				return self.install()
 
-	def runCommand(self, args, parseLine=lambda line: True, quiet=False, expected=0):
-		success = True
+	def runCommand(self, args, prefixArgs=[], parseLine=lambda line: True, quiet=False, expected=0):
+		args = prefixArgs + [ self.options['executable'] ] + args
 
 		self.log.debug(str(args))
 
-		with subprocess.Popen(args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT) as proc:
-			for line in iter(proc.stdout.readline, b''):
-				stripped = line.rstrip().decode('UTF-8')
+		success = True
 
-				if not quiet:
-					self.log.info(stripped)
+		try:
+			with subprocess.Popen(args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT) as proc:
+				for line in iter(proc.stdout.readline, b''):
+					stripped = line.rstrip().decode('UTF-8')
 
-				if not parseLine(stripped):
-					success = False
+					if not quiet:
+						self.log.info(stripped)
 
-			proc.communicate()
+					if not parseLine(stripped):
+						success = False
 
-			self.log.debug('returned %d' % (proc.returncode))
+				proc.communicate()
 
-			if proc.returncode != expected:
-				raise CalledProcessError(0, args)
+				self.log.debug('returned %d' % (proc.returncode))
+
+				if proc.returncode != expected or not success:
+					raise CalledProcessError(0, args)
+		except FileNotFoundError:
+			raise UserError('Failed to execute "%s".' % (str(args)))
 
 		return success

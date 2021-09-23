@@ -9,9 +9,8 @@ from subprocess import CalledProcessError
 
 class InklecateRecipe(InstallRecipe):
 	def __init__(self, buildout, name, options):
-		super().__init__(buildout, name, options)
+		super().__init__(buildout, name, options, executable='inklecate.exe')
 
-		self.options.setdefault('executable', 'inklecate.exe')
 		self.options.setdefault('output_directory', '')
 
 		# resolve input files
@@ -42,11 +41,7 @@ class InklecateRecipe(InstallRecipe):
 
 			# compile ink to json
 
-			args = [ self.options['executable'] ]
-			args.extend([ '-o', artefact_path ])
-			args.extend([ input_path ])
-
-			self.runCommand(args)
+			self.runCommand([ '-o', artefact_path, input_path ])
 
 			self.log.info('Compiled ink to "%s.json".' % filename)
 

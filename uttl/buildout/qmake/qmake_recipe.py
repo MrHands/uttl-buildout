@@ -8,9 +8,7 @@ from zc.buildout import UserError
 
 class QmakeRecipe(InstallRecipe):
 	def __init__(self, buildout, name, options):
-		super().__init__(buildout, name, options)
-
-		self.options.setdefault('executable', 'qmake')
+		super().__init__(buildout, name, options, executable='qmake')
 
 		self.files = self.options['files'].splitlines()
 		if not self.files:
@@ -38,15 +36,13 @@ class QmakeRecipe(InstallRecipe):
 		# build argument list
 
 		if 'vcvars' in self.options:
-			args = [ self.options['vcvars'], 'amd64', '&&' ]
+			prefix_args = [ self.options['vcvars'], 'amd64', '&&' ]
 		else:
-			args = []
+			prefix_args = []
 
-		args.append(self.options['executable'])
-		args += self.args
-		args += self.files
+		args = self.args + self.files
 
-		self.runCommand(args, parseLine = self.parseLine)
+		self.runCommand(args, prefixArgs=prefix_args, parseLine=self.parseLine)
 
 		return self.options.created()
 
