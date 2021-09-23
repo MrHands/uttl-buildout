@@ -14,12 +14,17 @@ class CmakeRecipe(InstallRecipe):
 
 		self.args = [ ]
 
+		# generator
+
 		if 'generator' in self.options:
 			self.args.extend([ '-G', self.options['generator'] ])
 
 		# configure or build
 
 		if 'configure_path' in self.options:
+			if not 'generator' in self.options:
+				raise UserError('Missing mandatory "generator" parameter.')
+
 			self.args.append(os.path.abspath(self.options['configure_path']))
 		else:
 			if not 'build_path' in self.options:
@@ -79,21 +84,18 @@ class CmakeRecipe(InstallRecipe):
 			self.log.debug(arg)
 
 		if len(self.var_args) > 0:
-			if 'configure_path' in self.options:
-				self.var_args.append(os.path.abspath(self.options['configure_path']))
-			elif 'build_path' in self.options:
-				self.var_args.append(os.path.abspath(self.options['build_path']))
+			if not 'install_path' in self.options:
+				raise UserError('Missing mandatory "install_path" parameter.')
+
+			self.var_args.append(os.path.abspath(self.options['install_path']))
 
 		self.options['var_args'] = ' '.join(str(e) for e in self.args)
 
 	def install(self):
-		# set variables
+		self.working_dir = os.getcwd()
+		configure_path = None
 
-		if len(self.var_args) > 0:
-			args = [ self.options['executable'] ] + self.var_args
-			self.runCommand(args, parseLine=self.parseLine, quiet=True)
-
-		# set working directory
+		# change to configure path
 
 		if 'configure_path' in self.options:
 			configure_path = os.path.abspath(self.options['configure_path'])
@@ -101,15 +103,25 @@ class CmakeRecipe(InstallRecipe):
 			if not os.path.exists(configure_path):
 				os.makedirs(configure_path, 0o777, True)
 
-			self.working_dir = os.getcwd()
 			os.chdir(configure_path)
+
+		# set variables
+
+		if len(self.var_args) > 0:
+			args = [ self.options['executable'] ]
+			args += [ '-G', self.options['generator'] ]
+			args += self.var_args
+
+			self.runCommand(args, parseLine=self.parseLine, quiet=True)
 
 		# run command
 
 		args = [ self.options['executable'] ] + self.args
 		self.runCommand(args, parseLine=self.parseLine)
 
-		if 'configure_path' in self.options:
+		# back to working directory
+
+		if configure_path:
 			os.chdir(self.working_dir)
 
 		# add manual artefact (e.g. generated solution)
