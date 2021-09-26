@@ -1,15 +1,39 @@
 from setuptools import setup, find_packages
+from contextlib import contextmanager
+import os.path
+import os
 
-def get_text_from_file(fn):
-	text = open(fn, 'rb').read()
-	return text.decode('utf-8')
+@contextmanager
+def change_dir(path):
+	current = os.path.abspath(os.curdir)
+	os.chdir(path)
+	try:
+		yield
+	finally:
+		os.chdir(current)
+
+# decorator for running functions inside the setup dir
+
+def in_setup_dir(fn):
+	setup_dir = os.path.dirname(os.path.abspath(__file__))
+
+	def wrapped(*args, **kwargs):
+		with change_dir(setup_dir):
+			return fn(*args, **kwargs)
+
+	return wrapped
+
+@in_setup_dir
+def get_text_from_file(path):
+	return open(path, encoding='utf-8').read()
 
 setup(name = 'uttl.buildout',
 	version = '1.0.0',
 	description = 'Utilities for Buildout developed for Up There They Love.',
-	long_description = '\n\n'.join([
-		get_text_from_file('README.md'),
-		get_text_from_file('CHANGES.md')]),
+	long_description =
+		get_text_from_file('README.md') +
+		get_text_from_file('CHANGES.md'),
+	long_description_content_type = 'text/markdown',
 	keywords = 'buildout extension uttl cmake qmake qt copyfile version',
 	classifiers = [
 		'Framework :: Buildout',
