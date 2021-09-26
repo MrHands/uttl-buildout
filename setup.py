@@ -11,10 +11,16 @@ setup(name = 'uttl.buildout',
 		get_text_from_file('README.md'),
 		get_text_from_file('CHANGES.md')]),
 	keywords = 'buildout extension uttl cmake qmake qt copyfile version',
+	classifiers = [
+		'Framework :: Buildout',
+		'Intended Audience :: Developers',
+		'Topic :: Software Development :: Build Tools',
+		'License :: OSI Approved :: MIT No Attribution License (MIT-0)',
+	],
 	author = 'Mr. Hands',
 	author_email = 'mrhands31@gmail.com',
 	url = 'https://github.com/MrHands/uttl-buildout',
-	license = 'MIT',
+	license = 'MIT-0',
 	packages = find_packages(),
 	namespace_packages = [ 'uttl' ],
 	include_package_data = True,
@@ -48,4 +54,4 @@ setup(name = 'uttl.buildout',
 			'versioncheck = uttl.buildout.versioncheck.versioncheck_recipe:uninstall',
 		]
 	},
-	)
+)

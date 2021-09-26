@@ -1,16 +1,7 @@
-             ___   _____        __  __    __       
-     /\ /\  / _ \ /__   \/\  /\/__\/__\  /__\      
-    / / \ \/ /_)/   / /\/ /_/ /_\ / \// /_\        
-    \ \_/ / ___/   / / / __  //__/ _  \//__        
-     \___/\/       \/  \/ /_/\__/\/ \_/\__/        
-                                                   
-     _____        __          __    ___         __ 
-    /__   \/\  /\/__\/\_/\   / /   /___\/\   /\/__\
-      / /\/ /_/ /_\  \_ _/  / /   //  //\ \ / /_\  
-     / / / __  //__   / \  / /___/ \_//  \ V //__  
-     \/  \/ /_/\__/   \_/  \____/\___/    \_/\__/  
+uttl.buildout
+=============
 
-Utilities for [buildout](buildout.org/) as developed for *Up There They Love*.
+Utilities for [zc.buildout](buildout.org/) as developed for *Up There They Love*.
 
 # Building from source
 
@@ -37,14 +28,15 @@ Add `uttl.buildout` to the `extensions` entry in your `[buildout]` section:
 
 # Recipes
 
-The following recipes (scripts) for buildout are available in this package:
+The following recipes (scripts) for `zc.buildout` are available in this package:
 
 * [uttl.buildout.cmake](uttl/buildout/cmake/README.md) - Run CMake commands
 * `uttl.buildout.copyfile`
 * `uttl.buildout.devenv`
+* `uttl.buildout.dotnet`
 * [uttl.buildout.inklecate](uttl/buildout/inklecate/README.md) - Compile .ink files to JSON
 * [uttl.buildout.qmake](uttl/buildout/qmake/README.md) - Run QMake commands
 * [uttl.buildout.qtdeploy](uttl/buildout/qtdeploy/README.md) - Deploy Qt libraries
-* [uttl.buildout.versioncheck](uttl/buildout/versioncheck/README.md) - Check installed version for executables
+* [uttl.buildout.versioncheck](uttl/buildout/versioncheck/README.md) - Get versioned executables
 
 Check the source folders for detailed documentation about each command.
