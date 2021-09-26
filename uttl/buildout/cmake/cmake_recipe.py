@@ -12,6 +12,11 @@ class CmakeRecipe(InstallRecipe):
 
 		self.args = [ ]
 
+		# source
+
+		if 'source-path' in self.options:
+			self.args += [ '-S', os.path.abspath(self.options['source-path']) ]
+
 		# generator
 
 		if 'generator' in self.options:
@@ -19,21 +24,20 @@ class CmakeRecipe(InstallRecipe):
 
 		# configure or build
 
-		if 'configure_path' in self.options:
+		if 'configure-path' in self.options:
 			if not 'generator' in self.options:
 				raise UserError('Missing mandatory "generator" parameter.')
 
-			self.args += [ '-B', os.path.abspath(self.options['configure_path']) ]
+			self.args += [ '-B', os.path.abspath(self.options['configure-path']) ]
 		else:
-			if not 'build_path' in self.options:
-				raise UserError('Missing mandatory "build_path" parameter.')
+			if not 'build-path' in self.options:
+				raise UserError('Missing mandatory "build-path" parameter.')
 
-			if 'build_path' in self.options:
-				build_path = os.path.abspath(self.options['build_path'])
-				self.args.extend([ '--build', build_path ])
+			build_path = os.path.abspath(self.options['build-path'])
+			self.args.extend([ '--build', build_path ])
 
-			if 'target' in self.options:
-				targets = self.options['target'].splitlines()
+			if 'targets' in self.options:
+				targets = self.options['targets'].splitlines()
 				self.args.extend([ '--target', ' '.join(str(t) for t in targets) ])
 
 			if 'config' in self.options:
@@ -45,16 +49,14 @@ class CmakeRecipe(InstallRecipe):
 
 		self.var_args = []
 
-		if 'install_path' in self.options:
-			install_path = os.path.abspath(self.options['install_path'])
-			self.options['var_CMAKE_INSTALL_PREFIX'] = os.path.abspath(install_path) + ':PATH'
+		if 'install-path' in self.options:
+			install_path = os.path.abspath(self.options['install-path'])
+			self.options['var-CMAKE_INSTALL_PREFIX'] = os.path.abspath(install_path) + ':PATH'
 
-			self.args += [ '-S', install_path ]
-
-		split_name = re.compile(r'var_(.+)')
+		split_name = re.compile(r'var-(.+)')
 		split_type = re.compile(r'(.+):(\w*)$')
 
-		for var in [var for var in list(self.options.keys()) if var.startswith('var_')]:
+		for var in [var for var in list(self.options.keys()) if var.startswith('var-')]:
 			# get name
 
 			match = split_name.match(var)
@@ -89,13 +91,10 @@ class CmakeRecipe(InstallRecipe):
 
 			self.var_args += [ '-G', self.options['generator'] ]
 
-			if not 'configure_path' in self.options:
-				raise UserError('Missing mandatory "configure_path" parameter.')
+			if not 'source-path' in self.options:
+				raise UserError('Missing mandatory "source-path" parameter.')
 
-			if not 'install_path' in self.options:
-				raise UserError('Missing mandatory "install_path" parameter.')
-
-			self.var_args.append(os.path.abspath(self.options['configure_path']))
+			self.var_args.append(os.path.abspath(self.options['source-path']))
 
 	def install(self):
 		self.working_dir = os.getcwd()
@@ -103,8 +102,8 @@ class CmakeRecipe(InstallRecipe):
 
 		# change to configure path
 
-		if 'configure_path' in self.options:
-			configure_path = os.path.abspath(self.options['configure_path'])
+		if 'configure-path' in self.options:
+			configure_path = os.path.abspath(self.options['configure-path'])
 
 			if not os.path.exists(configure_path):
 				os.makedirs(configure_path, 0o777, True)
@@ -122,13 +121,13 @@ class CmakeRecipe(InstallRecipe):
 
 		# back to working directory
 
-		if configure_path:
+		if configure-path:
 			os.chdir(self.working_dir)
 
 		# add manual artefact (e.g. generated solution)
 
-		if 'artefact_path' in self.options:
-			self.options.created(os.path.abspath(self.options['artefact_path']))
+		if 'artefact-path' in self.options:
+			self.options.created(os.path.abspath(self.options['artefact-path']))
 
 		return self.options.created()
 
