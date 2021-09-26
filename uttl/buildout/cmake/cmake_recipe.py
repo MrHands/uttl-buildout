@@ -23,7 +23,7 @@ class CmakeRecipe(InstallRecipe):
 			if not 'generator' in self.options:
 				raise UserError('Missing mandatory "generator" parameter.')
 
-			self.args.append(os.path.abspath(self.options['configure_path']))
+			self.args += [ '-B', os.path.abspath(self.options['configure_path']) ]
 		else:
 			if not 'build_path' in self.options:
 				raise UserError('Missing mandatory "build_path" parameter.')
@@ -48,6 +48,8 @@ class CmakeRecipe(InstallRecipe):
 		if 'install_path' in self.options:
 			install_path = os.path.abspath(self.options['install_path'])
 			self.options['var_CMAKE_INSTALL_PREFIX'] = os.path.abspath(install_path) + ':PATH'
+
+			self.args += [ '-S', install_path ]
 
 		split_name = re.compile(r'var_(.+)')
 		split_type = re.compile(r'(.+):(\w*)$')
