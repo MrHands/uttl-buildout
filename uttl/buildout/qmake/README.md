@@ -44,7 +44,7 @@ none, all, parser, logic, deprecated
 	recipe = uttl.buildout:qmake
 	executable = ${qmake:path}
 	vcvars = ${vcvars:path}
-	template_prefix = vc
+	template-prefix = vc
 	recursive = 1
 	artefact-path = ${qhttp-master:location}/qhttp.sln
 	files = ${qhttp-master:location}/qhttp.pro
