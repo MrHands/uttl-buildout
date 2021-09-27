@@ -13,30 +13,38 @@ class QmakeRecipe(InstallRecipe):
 		self.args = [ ]
 
 		if 'template' in self.options:
-			self.args.extend([ '-t', self.options['template'] ])
+			self.args += [ '-t', self.options['template'] ] 
 
 		if 'template-prefix' in self.options:
-			self.args.extend([ '-tp', self.options['template-prefix'] ])
+			self.args += [ '-tp', self.options['template-prefix'] ]
 
 		if 'recursive' in self.options:
-			self.args.append('-r')
+			if self.options['recursive'] == '1':
+				self.args += [ '-recursive' ]
+			else:
+				self.args += [ '-norecursive' ]
 
 		if 'artefact-path' in self.options:
-			self.args.extend([ '-o', self.options['artefact-path'] ])
+			self.args += [ '-o', self.options['artefact-path'] ]
 
-		# add file list
+		# warnings
 
-		if not 'files' in self.options:
-			raise UserError('Missing mandatory "files" parameter.')
+		if 'warnings' in self.options:
+			for w in self.options['warnings'].splitlines():
+				if w in [ 'none', 'all', 'parser', 'logic', 'deprecated' ]:
+					self.args += [ '-W%s' % (w) ]
 
-		self.args.extend(self.options['files'].splitlines())
+		# inputs
+
+		if not 'inputs' in self.options:
+			raise UserError('Missing mandatory "inputs" parameter.')
+
+		self.args += self.options['inputs'].splitlines()
 
 		self.options['args'] = ' '.join(str(e) for e in self.args)
 
 	def install(self):
 		self.options.created(self.options['artefact-path'])
-
-		# build argument list
 
 		if 'vcvars' in self.options:
 			prefix_args = [ self.options['vcvars'], 'amd64', '&&' ]
@@ -50,8 +58,6 @@ class QmakeRecipe(InstallRecipe):
 	check_errors = re.compile(r'.*ERROR:\s*(.*)')
 
 	def parseLine(self, line):
-		# check for errors
-
 		return not self.check_errors.match(line)
 
 def uninstall(name, options):

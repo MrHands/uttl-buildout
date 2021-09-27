@@ -1,14 +1,18 @@
 # uttl.buildout.qmake
 
+Generates project files using QMake. You must set the `vcvars` option if you intend to output project files for Visual Studio.
+
+Qt makefiles use the `.pro` extension.
+
 ## Configuration 
 
 `executable` (default: "qmake")
 
 Path to the executable used to run commands. You don't need to set this if the executable was added to the system-wide `PATH` environment variable.
 
-`files` (mandatory)
+`inputs` (mandatory)
 
-List of files
+List of Qt makefiles used for generating project files.
 
 `always-install` (optional)
 
@@ -16,17 +20,27 @@ Set this option to 1 to skip checks for missing installed files and always run t
 
 `template` (optional)
 
+Overrides the `TEMPLATE` variable used in the makefiles.
+
 `template-prefix` (optional)
+
+Adds a prefix to the value of the `TEMPLATE` variable used in the makefiles.
 
 `recursive` (optional)
 
+Set this value to 1 to do a recursive search for linked makefiles while processing list of inputs.
+
 `artefact-path` (optional)
+
+Specifies the path to the expected output, used for tracking whether the script needs to run again.
 
 `warnings` (optional)
 
+List of warning levels to enable. Valid options are `none`, `all`, `parser`, `logic`, and `deprecated`.
+
 `vcvars` (optional)
 
-none, all, parser, logic, deprecated
+Path to `vcvarsall.bat` batch script that comes with Visual Studio. Must be set if you intend to output Visual Studio project files with QMake.
 
 ## Example
 
