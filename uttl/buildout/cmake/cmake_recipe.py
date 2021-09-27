@@ -20,28 +20,31 @@ class CmakeRecipe(InstallRecipe):
 		# generator
 
 		if 'generator' in self.options:
-			self.args.extend([ '-G', self.options['generator'] ])
+			self.args += [ '-G', self.options['generator'] ]
 
 		# configure or build
 
 		if 'configure-path' in self.options:
 			if not 'generator' in self.options:
-				raise UserError('Missing mandatory "generator" parameter.')
+				raise UserError('Missing mandatory "generator" option.')
+
+			if not 'source-path' in self.options:
+				raise UserError('Missing mandatory "source-path" option.')
 
 			self.args += [ '-B', os.path.abspath(self.options['configure-path']) ]
 		else:
 			if not 'build-path' in self.options:
-				raise UserError('Missing mandatory "build-path" parameter.')
+				raise UserError('Missing mandatory "build-path" option.')
 
 			build_path = os.path.abspath(self.options['build-path'])
-			self.args.extend([ '--build', build_path ])
+			self.args += [ '--build', build_path ]
 
 			if 'targets' in self.options:
 				targets = self.options['targets'].splitlines()
-				self.args.extend([ '--target', ' '.join(str(t) for t in targets) ])
+				self.args += [ '--target', ' '.join(str(t) for t in targets) ]
 
 			if 'config' in self.options:
-				self.args.extend([ '--config', self.options['config'] ])
+				self.args += [ '--config', self.options['config'] ]
 
 		self.options['args'] = ' '.join(str(e) for e in self.args)
 
@@ -80,10 +83,7 @@ class CmakeRecipe(InstallRecipe):
 			if not any(var_type in t for t in ['BOOL', 'FILEPATH', 'PATH', 'STRING', 'INTERNAL']):
 				raise UserError('Invalid variable type "%s" for "%s".' % (var_type, var))
 
-			arg = '-D%s:%s=%s' % (var_name, var_type, var_value)
-			self.var_args.append(arg)
-
-			self.log.debug(arg)
+			self.var_args += [ '-D%s:%s=%s' % (var_name, var_type, var_value) ]
 
 		if len(self.var_args) > 0:
 			if not 'generator' in self.options:
@@ -91,10 +91,12 @@ class CmakeRecipe(InstallRecipe):
 
 			self.var_args += [ '-G', self.options['generator'] ]
 
-			if not 'source-path' in self.options:
-				raise UserError('Missing mandatory "source-path" parameter.')
-
-			self.var_args.append(os.path.abspath(self.options['source-path']))
+			if 'install-path' in self.options:
+				self.var_args += [ '-S', os.path.abspath(self.options['install-path']) ]
+			elif 'source-path' in self.options:
+				self.var_args += [ '-S', os.path.abspath(self.options['source-path']) ]
+			else:
+				raise UserError('Missing either "install-path" or "source-path" option.')
 
 	def install(self):
 		self.working_dir = os.getcwd()
@@ -121,7 +123,7 @@ class CmakeRecipe(InstallRecipe):
 
 		# back to working directory
 
-		if configure-path:
+		if configure_path:
 			os.chdir(self.working_dir)
 
 		# add manual artefact (e.g. generated solution)
