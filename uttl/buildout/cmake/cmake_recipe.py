@@ -39,7 +39,9 @@ class CmakeRecipe(InstallRecipe):
 			build_path = os.path.abspath(self.options['build-path'])
 			self.args += [ '--build', build_path ]
 
-			if 'targets' in self.options:
+			if 'target' in self.options:
+				self.args += [ '--target', self.options['target'] ]
+			elif 'targets' in self.options:
 				targets = self.options['targets'].splitlines()
 				self.args += [ '--target', ' '.join(str(t) for t in targets) ]
 
