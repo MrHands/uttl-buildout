@@ -1,12 +1,18 @@
 # uttl.buildout.devenv
 
-Builds a Visual Studio solution by invoke the development environment (`devenv.com`) directly.
+Invokes the Visual Studio development environment (`devenv.com`) to perform actions on projects and solutions.
+
+This recipe will automatically track the resulting binary files, but it cannot check whether any of the input files have changed. Buildout will only call the recipe if the resulting binary files are missing. Visual Studio also tracks whether files have changed, so you can make sure that your binary files are always built by setting `always-install` in your options.
 
 ## Configuration Options
 
 `executable` (default: "devenv.com")
 
 Path to the executable used to run commands. You don't need to set this if the executable was added to the system-wide `PATH` environment variable.
+
+`always-install` (optional)
+
+Set this option to 1 to skip checks for missing installed files and always run the script.
 
 `solution` (required)
 
