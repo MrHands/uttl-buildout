@@ -18,15 +18,15 @@ The path to the executable and its version number are cached in a .ini file in t
 
 Script function written in Python that is run to get the path to an executable. Lines of the function must be prefixed with `...` and must always return a tuple of values in this format: (Success (`True` or `False`), MajorVersion (`int`), MinorVersion (`int`), DebugVersion (`int`), Path (`string`)). The function can reference any option defined in the configuration using `self.options` and can write messages to the log using `self.log`.
 
-`required_major` (default: 0)
+`required-major` (default: 0)
 
 Minimum requirement for the major version of the executable. Can be 0.
 
-`required_minor` (default: 0)
+`required-minor` (default: 0)
 
 Minimum requirement for the minor version of the executable. Can be 0.
 
-`version_file` (default: "<name>.ini")
+`version-file` (default: "<name>.ini")
 
 Name for the .ini cache file in the `\parts` directory. Will default to the name of the buildout section.
 
@@ -36,15 +36,15 @@ Name for the .ini cache file in the `\parts` directory. Will default to the name
 
 Path to the found executable.
 
-`version_major`
+`version-major`
 
 Major version number of the executable.
 
-`version_minor`
+`version-minor`
 
 Minor version number of the executable.
 
-`version_debug`
+`version-debug`
 
 Debug version number of the executable.
 
@@ -52,13 +52,13 @@ Debug version number of the executable.
 
     [visual-studio]
     recipe = uttl.buildout:versioncheck
-    required_major = 2017
-    required_minor = 15
+    required-major = 2017
+    required-minor = 15
     body = ... path = None
         ... args = [ 
         ...   r'%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe',
         ...   '-version',
-        ...   '%s.0' % (self.options['required_minor']),
+        ...   '%s.0' % (self.options['required-minor']),
         ...   '-property',
         ...   'installationPath'
         ... ]
@@ -76,15 +76,15 @@ Debug version number of the executable.
         ...   self.log.error('Cannot find Visual Studio executable.')
         ...   return (False, 0, 0, 0, '')
         ...
-        ... return (True, self.options['required_major'], self.options['required_minor'], 64, path)
+        ... return (True, self.options['required-major'], self.options['required-minor'], 64, path)
 
 ## Example - Find CMake and set the generator to Visual Studio 2017
 
 	[cmake]
 	recipe = uttl.buildout:versioncheck
-	required_major = 3
-	required_minor = 19
-	generator = Visual Studio ${visual-studio:version_minor} ${visual-studio:version_major} Win${visual-studio:version_debug}
+	required-major = 3
+	required-minor = 19
+	generator = Visual Studio ${visual-studio:version-minor} ${visual-studio:version-major} Win${visual-studio:version-debug}
 	body = ... import winreg
 		...
 		... try:

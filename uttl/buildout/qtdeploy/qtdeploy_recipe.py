@@ -31,8 +31,8 @@ class QtDeployRecipe(InstallRecipe):
 
 		# compiler runtime
 
-		if 'compiler_runtime' in self.options:
-			if self.options['compiler_runtime'] == '1':
+		if 'compiler-runtime' in self.options:
+			if self.options['compiler-runtime'] == '1':
 				self.args.append('--compiler-runtime')
 			else:
 				self.args.append('--no-compiler-runtime')
@@ -55,25 +55,25 @@ class QtDeployRecipe(InstallRecipe):
 
 		# software rasterizer
 
-		if 'opengl_sw' in self.options:
+		if 'opengl-sw' in self.options:
 			self.args.append('--no-opengl-sw')
 
 		# virtual keyboard
 
-		if 'virtual_keyboard' in self.options:
+		if 'virtual-keyboard' in self.options:
 			self.args.append('--no-virtualkeyboard')
 
 		# d3d
 
-		if 'system_d3d_compiler' in self.options:
+		if 'system-d3d-compiler' in self.options:
 			self.args.append('--no-system-d3d-compiler')
 
 		# target path
 
-		if not 'target_path' in self.options:
-			raise UserError('Missing mandatory "target_path" parameter.')
+		if not 'target-path' in self.options:
+			raise UserError('Missing mandatory "target-path" parameter.')
 
-		self.args.append(self.options['target_path'])
+		self.args.append(self.options['target-path'])
 		self.options['args'] = ' '.join(str(e) for e in self.args)
 
 	def install(self):

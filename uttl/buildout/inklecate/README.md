@@ -8,11 +8,11 @@ Calls the Inklecate compiler executable to compile .ink files into .json files.
 
 Path to the executable used to run commands. You don't need to set this if the executable was added to the system-wide `PATH` environment variable.
 
-`always_install` (optional)
+`always-install` (optional)
 
 Set this option to 1 to skip checks for missing installed files and always run the script.
 
-`output_directory` (optional)
+`output-directory` (optional)
 
 Directory where the  Defaults to the current directory.
 
@@ -32,4 +32,4 @@ List of .ink files to compile using Inklecate.
 		C:\Projects\SSSG\source\narrative\todo_mechanic.ink
 		C:\Projects\SSSG\source\narrative\todo_diplomate.ink
 		C:\Projects\SSSG\source\narrative\todo_amazon.ink
-	output_directory = C:\Projects\SSSG\build\data\stories
+	output-directory = C:\Projects\SSSG\build\data\stories

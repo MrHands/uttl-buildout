@@ -11,12 +11,12 @@ class VersionCheckRecipe(BaseRecipe):
 	def __init__(self, buildout, name, options):
 		super().__init__(buildout, name, options)
 
-		self.options.setdefault('version_file', name + '.ini')
-		self.options.setdefault('required_major', '0')
-		self.options.setdefault('required_minor', '0')
-		self.options.setdefault('version_major', '0')
-		self.options.setdefault('version_minor', '0')
-		self.options.setdefault('version_debug', '0')
+		self.options.setdefault('version-file', name + '.ini')
+		self.options.setdefault('required-major', '0')
+		self.options.setdefault('required-minor', '0')
+		self.options.setdefault('version-major', '0')
+		self.options.setdefault('version-minor', '0')
+		self.options.setdefault('version-debug', '0')
 
 		# convert body into function
 		# adapted from mr.scripty
@@ -38,7 +38,7 @@ class VersionCheckRecipe(BaseRecipe):
 
 		# version file
 
-		self.version_file = os.path.join(buildout['buildout']['parts-directory'], self.options['version_file'])
+		self.version_file = os.path.join(buildout['buildout']['parts-directory'], self.options['version-file'])
 
 		# check version using script method
 
@@ -46,12 +46,12 @@ class VersionCheckRecipe(BaseRecipe):
 		if not success:
 			raise UserError('Failed to check version.')
 
-		self.options['version_major'] = str(self.version_major)
-		self.options['version_minor'] = str(self.version_minor)
-		self.options['version_debug'] = str(self.version_debug)
+		self.options['version-major'] = str(self.version_major)
+		self.options['version-minor'] = str(self.version_minor)
+		self.options['version-debug'] = str(self.version_debug)
 		self.options['path'] = self.path
 
-		self.log.debug('path %s version %s.%s.%s' % (self.options['path'], self.options['version_major'], self.options['version_minor'], self.options['version_debug']))
+		self.log.debug('path %s version %s.%s.%s' % (self.options['path'], self.options['version-major'], self.options['version-minor'], self.options['version-debug']))
 
 	def install(self):
 		# read or create version object
@@ -71,9 +71,9 @@ class VersionCheckRecipe(BaseRecipe):
 		# version check
 
 		installed = [
-			int(self.options['version_major']),
-			int(self.options['version_minor']),
-			int(self.options['version_debug'])
+			int(self.options['version-major']),
+			int(self.options['version-minor']),
+			int(self.options['version-debug'])
 		]
 		cached = [
 			int(self.version['version']['major']),
@@ -81,8 +81,8 @@ class VersionCheckRecipe(BaseRecipe):
 			int(self.version['version']['debug']),
 		]
 		required = [
-			int(self.options['required_major']),
-			int(self.options['required_minor'])
+			int(self.options['required-major']),
+			int(self.options['required-minor'])
 		]
 
 		# check for newer version

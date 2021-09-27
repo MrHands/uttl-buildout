@@ -11,7 +11,7 @@ class InklecateRecipe(InstallRecipe):
 	def __init__(self, buildout, name, options):
 		super().__init__(buildout, name, options, executable='inklecate.exe')
 
-		self.options.setdefault('output_directory', '')
+		self.options.setdefault('output-directory', '')
 
 		# resolve input files
 
@@ -27,7 +27,7 @@ class InklecateRecipe(InstallRecipe):
 	def install(self):
 		# resolve output files
 
-		output_directory = self.options['output_directory']
+		output_directory = self.options['output-directory']
 
 		for i in self.input_resolved:
 			if not os.path.exists(i):

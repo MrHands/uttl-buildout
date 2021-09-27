@@ -12,7 +12,7 @@ class InstallRecipe(BaseRecipe):
 		self.options.setdefault('executable', executable)
 
 	def update(self):
-		if 'always_install' in self.options and self.options['always_install'] == '1':
+		if 'always-install' in self.options and self.options['always-install'] == '1':
 			return self.install()
 
 		# use private api to check for files that need to be installed

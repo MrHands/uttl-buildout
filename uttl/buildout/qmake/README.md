@@ -10,17 +10,17 @@ Path to the executable used to run commands. You don't need to set this if the e
 
 List of files
 
-`always_install` (optional)
+`always-install` (optional)
 
 Set this option to 1 to skip checks for missing installed files and always run the script.
 
 `template` (optional)
 
-`template_prefix` (optional)
+`template-prefix` (optional)
 
 `recursive` (optional)
 
-`artefact_path` (optional)
+`artefact-path` (optional)
 
 `warnings` (optional)
 
@@ -46,5 +46,5 @@ none, all, parser, logic, deprecated
 	vcvars = ${vcvars:path}
 	template_prefix = vc
 	recursive = 1
-	artefact_path = ${qhttp-master:location}/qhttp.sln
+	artefact-path = ${qhttp-master:location}/qhttp.sln
 	files = ${qhttp-master:location}/qhttp.pro

@@ -15,14 +15,14 @@ class QmakeRecipe(InstallRecipe):
 		if 'template' in self.options:
 			self.args.extend([ '-t', self.options['template'] ])
 
-		if 'template_prefix' in self.options:
-			self.args.extend([ '-tp', self.options['template_prefix'] ])
+		if 'template-prefix' in self.options:
+			self.args.extend([ '-tp', self.options['template-prefix'] ])
 
 		if 'recursive' in self.options:
 			self.args.append('-r')
 
-		if 'artefact_path' in self.options:
-			self.args.extend([ '-o', self.options['artefact_path'] ])
+		if 'artefact-path' in self.options:
+			self.args.extend([ '-o', self.options['artefact-path'] ])
 
 		# add file list
 
@@ -34,7 +34,7 @@ class QmakeRecipe(InstallRecipe):
 		self.options['args'] = ' '.join(str(e) for e in self.args)
 
 	def install(self):
-		self.options.created(self.options['artefact_path'])
+		self.options.created(self.options['artefact-path'])
 
 		# build argument list
 
