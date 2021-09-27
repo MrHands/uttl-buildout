@@ -24,9 +24,6 @@ class QmakeRecipe(InstallRecipe):
 			else:
 				self.args += [ '-norecursive' ]
 
-		if 'artefact-path' in self.options:
-			self.args += [ '-o', self.options['artefact-path'] ]
-
 		# warnings
 
 		if 'warnings' in self.options:
@@ -34,10 +31,17 @@ class QmakeRecipe(InstallRecipe):
 				if w in [ 'none', 'all', 'parser', 'logic', 'deprecated' ]:
 					self.args += [ '-W%s' % (w) ]
 
+		# artefact
+
+		if not 'artefact-path' in self.options:
+			raise UserError('Missing mandatory "artefact-path" option.')
+
+		self.args += [ '-o', self.options['artefact-path'] ]
+
 		# inputs
 
 		if not 'inputs' in self.options:
-			raise UserError('Missing mandatory "inputs" parameter.')
+			raise UserError('Missing mandatory "inputs" option.')
 
 		self.args += self.options['inputs'].splitlines()
 

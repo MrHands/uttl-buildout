@@ -1,8 +1,8 @@
 # uttl.buildout.qmake
 
-Generates project files using QMake. You must set the `vcvars` option if you intend to output project files for Visual Studio.
+Generates project files from Qt makefiles (`.pro`) using QMake. You must set the `vcvars` option if you intend to output project files for Visual Studio.
 
-Qt makefiles use the `.pro` extension.
+Note that the recipe does not check whether the input files for QMake have changed, only if the output artefact is missing. Buildout will not install the recipe again if the files used by the makefile have changed. QMake also tracks whether inputs have changed, so you can use the `always-install` option if you want to make sure that the generated project files are always up to date.
 
 ## Configuration 
 
@@ -14,6 +14,10 @@ Path to the executable used to run commands. You don't need to set this if the e
 
 List of Qt makefiles used for generating project files.
 
+`artefact-path` (optional)
+
+Specifies the path to the project file output. Also used for tracking whether the script needs to run again.
+
 `always-install` (optional)
 
 Set this option to 1 to skip checks for missing installed files and always run the script.
@@ -24,15 +28,11 @@ Overrides the `TEMPLATE` variable used in the makefiles.
 
 `template-prefix` (optional)
 
-Adds a prefix to the value of the `TEMPLATE` variable used in the makefiles.
+Adds a prefix to the value of the `TEMPLATE` variable used in the makefiles. Setting this option to `vc` will tell QMake to output Visual Studio project files.
 
 `recursive` (optional)
 
-Set this value to 1 to do a recursive search for linked makefiles while processing list of inputs.
-
-`artefact-path` (optional)
-
-Specifies the path to the expected output, used for tracking whether the script needs to run again.
+Set this value to 1 to do a recursive search for linked makefiles while processing the list of inputs.
 
 `warnings` (optional)
 
