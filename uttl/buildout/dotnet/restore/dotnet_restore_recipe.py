@@ -41,10 +41,10 @@ class DotnetRestoreRecipe(DotnetRecipe):
 		if 'locked-mode' in self.options:
 			self.args += [ '--locked-mode' ]
 
-		if 'no-cache' in self.options:
+		if 'cache' in self.options and self.options['cache'] == '0':
 			self.args += [ '--no-cache' ]
 
-		if 'no-dependencies' in self.options:
+		if 'dependencies' in self.options and self.options['dependencies'] == '0':
 			self.args += [ '--no-dependencies' ]
 
 		if 'packages-path' in self.options:

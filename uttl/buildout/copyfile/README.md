@@ -2,7 +2,7 @@
 
 Copies files from a source directory to a destination, both when the destination files do not exist and when the source files were modified.
 
-## Configuration Options
+## Configuration
 
 `files` (required)
 

@@ -4,7 +4,7 @@ Executes commands using a CMake build script, to e.g. to generate a Visual Studi
 
 The recipe will automatically keep track of files that were generated, including when you run an `INSTALL` target. Only when the output was deleted will the command be run again.
 
-## Configuration Options
+## Configuration
 
 `executable` (default: "cmake")
 
