@@ -9,7 +9,7 @@ class CopyFileRecipe(BaseRecipe):
 	def __init__(self, buildout, name, options):
 		super().__init__(buildout, name, options)
 
-		self.options.setdefault('source-path', '')
+		self.options.setdefault('source-path', os.getcwd())
 		self.options.setdefault('destination-path', os.getcwd())
 
 		# paths

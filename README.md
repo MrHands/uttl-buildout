@@ -15,7 +15,7 @@ Add `uttl.buildout` to the `extensions` entry in your `[buildout]` section:
 The following recipes (scripts) for `zc.buildout` are available in this package:
 
 * [uttl.buildout.cmake](uttl/buildout/cmake/README.md) - Run CMake commands
-* `uttl.buildout.copyfile`
+* [uttl.buildout.copyfile](uttl/buildout/copyfile/README.md) - Copy files between directories
 * `uttl.buildout.devenv`
 * `uttl.buildout.dotnet`
 * [uttl.buildout.inklecate](uttl/buildout/inklecate/README.md) - Compile .ink files to JSON
