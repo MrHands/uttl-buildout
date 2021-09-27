@@ -38,6 +38,9 @@ class DotnetRestoreRecipe(DotnetRecipe):
 		if 'interactive' in self.options:
 			self.args += [ '--interactive' ]
 
+		if 'lock-file-path' in self.options:
+			self.args += [ '--lock-file-path', self.options['lock-file-path'] ]
+
 		if 'locked-mode' in self.options:
 			self.args += [ '--locked-mode' ]
 
@@ -60,7 +63,12 @@ class DotnetRestoreRecipe(DotnetRecipe):
 			self.args += [ '--use-lock-file' ]
 
 		if 'verbosity' in self.options:
-			self.args += [ '--verbosity', self.options['verbosity'] ]
+			level = self.options['verbosity']
+
+			if not any(level in v for v in ['quiet', 'minimal', 'normal', 'detailed', 'diagnostic']):
+				raise UserError('Invalid verbosity level specified.')
+
+			self.args += [ '--verbosity', level ]
 
 		self.options['args'] = ' '.join(str(e) for e in self.args)
 
