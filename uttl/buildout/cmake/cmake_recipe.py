@@ -15,7 +15,12 @@ class CmakeRecipe(InstallRecipe):
 		# source
 
 		if 'source-path' in self.options:
-			self.args += [ '-S', os.path.abspath(self.options['source-path']) ]
+			source_path = os.path.abspath(self.options['source-path'])
+		elif 'install-path' in self.options:
+			source_path = os.path.abspath(self.options['install-path'])
+
+		if not source_path:
+			raise UserError('Missing either "source-path" or "install-path" option.')
 
 		# generator
 
@@ -28,16 +33,14 @@ class CmakeRecipe(InstallRecipe):
 			if not 'generator' in self.options:
 				raise UserError('Missing mandatory "generator" option.')
 
-			if not 'source-path' in self.options:
-				raise UserError('Missing mandatory "source-path" option.')
+			self.args += [ '-S', source_path ]
 
 			self.args += [ '-B', os.path.abspath(self.options['configure-path']) ]
 		else:
 			if not 'build-path' in self.options:
 				raise UserError('Missing mandatory "build-path" option.')
 
-			build_path = os.path.abspath(self.options['build-path'])
-			self.args += [ '--build', build_path ]
+			self.args += [ '--build', os.path.abspath(self.options['build-path']) ]
 
 			if 'target' in self.options:
 				self.args += [ '--target', self.options['target'] ]
@@ -93,12 +96,7 @@ class CmakeRecipe(InstallRecipe):
 
 			self.var_args += [ '-G', self.options['generator'] ]
 
-			if 'install-path' in self.options:
-				self.var_args += [ '-S', os.path.abspath(self.options['install-path']) ]
-			elif 'source-path' in self.options:
-				self.var_args += [ '-S', os.path.abspath(self.options['source-path']) ]
-			else:
-				raise UserError('Missing either "install-path" or "source-path" option.')
+			self.var_args += [ '-S', source_path ]
 
 	def install(self):
 		self.working_dir = os.getcwd()
