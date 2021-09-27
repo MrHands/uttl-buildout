@@ -26,7 +26,7 @@ class QmakeRecipe(InstallRecipe):
 
 		# add file list
 
-		if 'files' in self.options:
+		if not 'files' in self.options:
 			raise UserError('Missing mandatory "files" parameter.')
 
 		self.args.extend(self.options['files'].splitlines())
