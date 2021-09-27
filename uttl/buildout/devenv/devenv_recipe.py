@@ -13,11 +13,27 @@ class DevenvRecipe(InstallRecipe):
 
 		self.args = [ os.path.abspath(self.options['solution']) ]
 
-		if 'project' in self.options:
-			self.args.extend([ '/Project', self.options['project'] ])
+		# actions on a project
 
 		if 'build' in self.options:
 			self.args.extend([ '/Build', self.options['build'] ])
+
+		if 'rebuild' in self.options:
+			self.args.extend([ '/Rebuild', self.options['rebuild'] ])
+
+		if 'clean' in self.options:
+			self.args.extend([ '/Clean', self.options['clean'] ])
+
+		if 'deploy' in self.options:
+			self.args.extend([ '/Deploy', self.options['deploy'] ])
+
+		if 'project' in self.options:
+			if not any(action in ['build', 'rebuild', 'clean', 'deploy'] for action in self.options):
+				raise UserError('Missing a "build", "rebuild", "clean", or "deploy" option in order to use "project".')
+
+			self.args.extend([ '/Project', self.options['project'] ])
+
+		# commands
 
 		if 'command' in self.options:
 			self.args.extend([ '/Command', '"%s"' % self.options['command'] ])
