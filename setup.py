@@ -59,6 +59,7 @@ setup(name = 'uttl.buildout',
 	entry_points = { 
 		'zc.buildout': [
 			'cmake = uttl.buildout.cmake.cmake_recipe:CmakeRecipe',
+			'command = uttl.buildout.command_recipe:CommandRecipe',
 			'copyfile = uttl.buildout.copyfile.copyfile_recipe:CopyFileRecipe',
 			'devenv = uttl.buildout.devenv.devenv_recipe:DevenvRecipe',
 			'dotnet.restore = uttl.buildout.dotnet.restore.dotnet_restore_recipe:DotnetRestoreRecipe',
@@ -69,6 +70,7 @@ setup(name = 'uttl.buildout',
 		],
 		'zc.buildout.uninstall': [
 			'cmake = uttl.buildout.cmake.cmake_recipe:uninstall',
+			'command = uttl.buildout.command_recipe:uninstall',
 			'copyfile = uttl.buildout.copyfile.copyfile_recipe:uninstall',
 			'devenv = uttl.buildout.devenv.devenv_recipe:uninstall',
 			'dotnet.restore = uttl.buildout.dotnet.restore.dotnet_restore_recipe:uninstall',
