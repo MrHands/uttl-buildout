@@ -43,6 +43,9 @@ class DevenvRecipe(CommandRecipe):
 		self.options['args'] = ' '.join(str(e) for e in self.args)
 
 	def install(self):
+		for a in self.artefacts:
+			self.options.created(os.path.abspath(a))
+
 		self.runCommand(self.args, parseLine=self.parseLine)
 
 		return self.options.created()
