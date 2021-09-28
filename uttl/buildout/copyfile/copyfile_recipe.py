@@ -28,6 +28,11 @@ class CopyFileRecipe(BaseRecipe):
 		self.files = [os.path.join(self.dst_path, file) for file in self.options['files'].splitlines()]
 
 	def install(self):
+		self.log.debug(str(self.files))
+
+		for f in self.files:
+			self.options.created(f)
+
 		for dst_path in self.files:
 			filename = os.path.basename(dst_path)
 
@@ -59,8 +64,6 @@ class CopyFileRecipe(BaseRecipe):
 	def copyFile(self, src, dst, filename):
 		if not os.path.exists(src):
 			raise FileNotFoundError(src)
-
-		self.options.created(dst)
 
 		self.log.info('Copying "' + filename + "'...")
 
