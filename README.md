@@ -5,7 +5,7 @@ Utilities for [zc.buildout](buildout.org/) as developed for *Up There They Love*
 
 # Usage
 
-The `uttl.buildout` package will be autommatically installed from [PyPi](https://pypi.org/project/uttl.buildout/) when you use it in your buildout configuration.
+The `uttl.buildout` package will be automatically installed from [PyPi](https://pypi.org/project/uttl.buildout/) when you use it in your buildout configuration.
 
     [buildout]
     parts =
@@ -56,11 +56,17 @@ The `uttl.buildout` package will be autommatically installed from [PyPi](https:/
     project = SSSG
     build = Release
 
+You can also clone the repository and use it directly as a package of recipes:
+
+    [buildout]
+    develop = C:\Downloads\uttl-buildout
+
 # Recipes
 
 The following recipes (scripts) for `zc.buildout` are available in this package:
 
 * [uttl.buildout.cmake](uttl/buildout/cmake/README.md) - Run CMake commands
+* [uttl.buildout.command](uttl/buildout/README.md) - Run an executable with arguments
 * [uttl.buildout.copyfile](uttl/buildout/copyfile/README.md) - Copy files between directories
 * [uttl.buildout.devenv](uttl/buildout/devenv/README.md) - Build projects with Visual Studio
 * [uttl.buildout.dotnet.restore](uttl/buildout/dotnet/restore/README.md) - Restore .NET packages
@@ -86,10 +92,10 @@ Create egg in `dist/` folder:
 
     python setup.py bdist_egg
 
-Install manually:
+Install on your system using `easy_install`:
 
     python -m easy_install -a dist\uttl_buildout-1.0.0-py3.9.egg
 
-Upload to package manager:
+Upload packaged egg to repository:
 
     python -m twine upload --repository pypi dist/*
