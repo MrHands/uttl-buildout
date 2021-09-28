@@ -1,17 +1,16 @@
 import os.path
 import re
-import subprocess
 
-from uttl.buildout.install_recipe import InstallRecipe
+from uttl.buildout.command_recipe import CommandRecipe
 from zc.buildout import UserError
 
-class QtDeployRecipe(InstallRecipe):
+class QtDeployRecipe(CommandRecipe):
 	def __init__(self, buildout, name, options):
 		super().__init__(buildout, name, options, executable='windeployqt.exe')
 
 		self.options.setdefault('target', 'release')
 
-		self.args = [ ]
+		self.args = []
 
 		# target
 
@@ -68,12 +67,17 @@ class QtDeployRecipe(InstallRecipe):
 		if 'system-d3d-compiler' in self.options:
 			self.args.append('--no-system-d3d-compiler')
 
+		# additional arguments
+
+		self.args += self.additional_args
+
 		# target path
 
 		if not 'target-path' in self.options:
 			raise UserError('Missing mandatory "target-path" parameter.')
 
 		self.args.append(self.options['target-path'])
+
 		self.options['args'] = ' '.join(str(e) for e in self.args)
 
 	def install(self):
@@ -87,9 +91,7 @@ class QtDeployRecipe(InstallRecipe):
 		# get list of files
 
 		self.files = []
-
-		args = [ '--list', 'target' ] + self.args
-		self.runCommand(args, prefixArgs=prefix_args, parseLine=self.parseFileList, quiet=True)
+		self.runCommand([ '--list', 'target' ] + self.args, prefixArgs=prefix_args, parseLine=self.parseFileList, quiet=True)
 
 		# copy files
 

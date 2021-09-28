@@ -1,12 +1,9 @@
-import logging
-import os
 import re
-import subprocess
 
-from uttl.buildout.install_recipe import InstallRecipe
+from uttl.buildout.command_recipe import CommandRecipe
 from zc.buildout import UserError
 
-class QmakeRecipe(InstallRecipe):
+class QmakeRecipe(CommandRecipe):
 	def __init__(self, buildout, name, options):
 		super().__init__(buildout, name, options, executable='qmake')
 
@@ -45,10 +42,15 @@ class QmakeRecipe(InstallRecipe):
 
 		self.args += self.options['inputs'].splitlines()
 
+		self.args += self.additional_args
+
 		self.options['args'] = ' '.join(str(e) for e in self.args)
 
 	def install(self):
 		self.options.created(self.options['artefact-path'])
+
+		for a in self.artefacts:
+			self.options.created(os.path.abspath(a))
 
 		if 'vcvars' in self.options:
 			prefix_args = [ self.options['vcvars'], 'amd64', '&&' ]

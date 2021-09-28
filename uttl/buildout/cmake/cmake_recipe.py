@@ -1,12 +1,10 @@
-import logging
-import os
+import os.path
 import re
-import subprocess
 
-from uttl.buildout.install_recipe import InstallRecipe
+from uttl.buildout.command_recipe import CommandRecipe
 from zc.buildout import UserError
 
-class CmakeRecipe(InstallRecipe):
+class CmakeRecipe(CommandRecipe):
 	def __init__(self, buildout, name, options):
 		super().__init__(buildout, name, options, executable='cmake')
 
@@ -50,6 +48,10 @@ class CmakeRecipe(InstallRecipe):
 
 			if 'config' in self.options:
 				self.args += [ '--config', self.options['config'] ]
+
+		# additional args
+
+		self.args += self.additional_args
 
 		self.options['args'] = ' '.join(str(e) for e in self.args)
 
@@ -97,6 +99,8 @@ class CmakeRecipe(InstallRecipe):
 			self.var_args += [ '-G', self.options['generator'] ]
 
 			self.var_args += [ '-S', source_path ]
+
+			self.var_args += self.additional_args
 
 	def install(self):
 		self.working_dir = os.getcwd()

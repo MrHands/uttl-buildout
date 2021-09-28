@@ -1,10 +1,10 @@
 import os.path
 import re
 
-from uttl.buildout.install_recipe import InstallRecipe
+from uttl.buildout.command_recipe import CommandRecipe
 from zc.buildout import UserError
 
-class DevenvRecipe(InstallRecipe):
+class DevenvRecipe(CommandRecipe):
 	def __init__(self, buildout, name, options):
 		super().__init__(buildout, name, options, executable='devenv.com')
 
@@ -37,6 +37,8 @@ class DevenvRecipe(InstallRecipe):
 
 		if 'command' in self.options:
 			self.args.extend([ '/Command', '"%s"' % self.options['command'] ])
+
+		self.args += self.additional_args
 
 		self.options['args'] = ' '.join(str(e) for e in self.args)
 

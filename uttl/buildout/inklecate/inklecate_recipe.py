@@ -1,13 +1,11 @@
 import glob
-import os
+import os.path
 import re
-import subprocess
 
-from uttl.buildout.install_recipe import InstallRecipe
+from uttl.buildout.command_recipe import CommandRecipe
 from zc.buildout import UserError
-from subprocess import CalledProcessError
 
-class InklecateRecipe(InstallRecipe):
+class InklecateRecipe(CommandRecipe):
 	def __init__(self, buildout, name, options):
 		super().__init__(buildout, name, options, executable='inklecate.exe')
 

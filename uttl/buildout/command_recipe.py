@@ -5,14 +5,45 @@ from subprocess import CalledProcessError
 from uttl.buildout.base_recipe import BaseRecipe
 from zc.buildout import UserError
 
-class InstallRecipe(BaseRecipe):
-	def __init__(self, buildout, name, options, executable=''):
+class CommandRecipe(BaseRecipe):
+	def __init__(self, buildout, name, options, executable='cmd.exe'):
 		super().__init__(buildout, name, options)
 
 		self.options.setdefault('executable', executable)
 
+		# always install
+		
+		self.always_install = False
+
+		if 'always-install' in self.options:
+			self.always_install = self.options['always-install'] == '1'
+
+		# artefacts
+
+		self.artefacts = []
+
+		if 'artefacts' in self.options:
+			self.artefacts += self.options['artefacts'].splitlines()
+
+		# arguments
+
+		self.additional_args = []
+
+		if 'arguments' in self.options:
+			self.additional_args = self.options['arguments'].splitlines()
+
+		self.args = self.additional_args
+
+	def install(self):
+		for a in self.artefacts:
+			self.options.created(os.path.abspath(a))
+
+		self.runCommand(self.args)
+
+		return self.options.created()
+
 	def update(self):
-		if 'always-install' in self.options and self.options['always-install'] == '1':
+		if self.always_install:
 			return self.install()
 
 		# use private api to check for files that need to be installed
@@ -58,7 +89,7 @@ class InstallRecipe(BaseRecipe):
 				self.log.debug('returned %d' % (proc.returncode))
 
 				if proc.returncode != expected or not success:
-					raise CalledProcessError(0, args)
+					raise CalledProcessError(proc.returncode, args)
 		except FileNotFoundError:
 			raise UserError('Failed to execute "%s".' % (str(args)))
 
