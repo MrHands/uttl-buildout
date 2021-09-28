@@ -12,7 +12,7 @@ Even when a semantic version does not exist you can still create your own. For e
 
 The path to the executable and its version number are cached in a .ini file in the `\parts` directory.
 
-## Configuration
+## Options
 
 `body` (required)
 
