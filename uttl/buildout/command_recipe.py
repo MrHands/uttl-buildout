@@ -23,7 +23,7 @@ class CommandRecipe(BaseRecipe):
 		self.artefacts = []
 
 		if 'artefacts' in self.options:
-			self.artefacts += self.options['artefacts'].splitlines()
+			self.artefacts += [os.path.abspath(path) for path in self.options['artefacts'].splitlines()]
 
 		# arguments
 
@@ -36,7 +36,7 @@ class CommandRecipe(BaseRecipe):
 
 	def install(self):
 		for a in self.artefacts:
-			self.options.created(os.path.abspath(a))
+			self.options.created(a)
 
 		self.runCommand(self.args)
 

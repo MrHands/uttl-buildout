@@ -11,6 +11,8 @@ class InklecateRecipe(CommandRecipe):
 
 		self.options.setdefault('output-directory', '')
 
+		self.output_directory = self.options['output-directory']
+
 		# resolve input files
 
 		if not 'input' in self.options:
@@ -23,9 +25,10 @@ class InklecateRecipe(CommandRecipe):
 		self.options['input_resolved'] = ' '.join(str(e) for e in self.input_resolved)
 
 	def install(self):
-		# resolve output files
+		for a in self.artefacts:
+			self.options.created(a)
 
-		output_directory = self.options['output-directory']
+		# resolve output files
 
 		for i in self.input_resolved:
 			if not os.path.exists(i):
@@ -33,13 +36,15 @@ class InklecateRecipe(CommandRecipe):
 
 			input_path = os.path.abspath(i)
 			filename = os.path.split(input_path)[1]
-			artefact_path = os.path.join(output_directory, os.path.splitext(filename)[0] + '.json')
+			artefact_path = os.path.join(self.output_directory, os.path.splitext(filename)[0] + '.json')
 
 			self.options.created(artefact_path)
 
 			# compile ink to json
 
-			self.runCommand([ '-o', artefact_path, input_path ])
+			args = self.additional_args
+			args += [ '-o', artefact_path, input_path ]
+			self.runCommand(args)
 
 			self.log.info('Compiled ink to "%s.json".' % filename)
 

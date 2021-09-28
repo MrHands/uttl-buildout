@@ -8,8 +8,6 @@ class CmakeRecipe(CommandRecipe):
 	def __init__(self, buildout, name, options):
 		super().__init__(buildout, name, options, executable='cmake')
 
-		self.args = [ ]
-
 		# source
 
 		source_path = None
@@ -51,11 +49,14 @@ class CmakeRecipe(CommandRecipe):
 			if 'config' in self.options:
 				self.args += [ '--config', self.options['config'] ]
 
-		# additional args
-
-		self.args += self.additional_args
+		# combine arguments
 
 		self.options['args'] = ' '.join(str(e) for e in self.args)
+
+		# artefacts
+
+		if 'artefact-path' in self.options:
+			self.artefacts += [ os.path.abspath(self.options['artefact-path']) ]
 
 		# variables
 
@@ -105,10 +106,15 @@ class CmakeRecipe(CommandRecipe):
 			self.var_args += self.additional_args
 
 	def install(self):
-		self.working_dir = os.getcwd()
-		configure_path = None
+		# add manual artefact (e.g. generated solution)
+
+		for a in self.artefacts:
+			self.options.created(a)
 
 		# change to configure path
+
+		self.working_dir = os.getcwd()
+		configure_path = None
 
 		if 'configure-path' in self.options:
 			configure_path = os.path.abspath(self.options['configure-path'])
@@ -131,11 +137,6 @@ class CmakeRecipe(CommandRecipe):
 
 		if configure_path:
 			os.chdir(self.working_dir)
-
-		# add manual artefact (e.g. generated solution)
-
-		if 'artefact-path' in self.options:
-			self.options.created(os.path.abspath(self.options['artefact-path']))
 
 		return self.options.created()
 

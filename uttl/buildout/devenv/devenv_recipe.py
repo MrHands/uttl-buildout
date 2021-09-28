@@ -11,40 +11,38 @@ class DevenvRecipe(CommandRecipe):
 		if not 'solution' in self.options:
 			raise UserError('Missing mandatory "solution" option.')
 
-		self.args = [ os.path.abspath(self.options['solution']) ]
+		self.args += [ os.path.abspath(self.options['solution']) ]
 
 		# actions on a project
 
 		if 'build' in self.options:
-			self.args.extend([ '/Build', self.options['build'] ])
+			self.args += [ '/Build', self.options['build'] ]
 
 		if 'rebuild' in self.options:
-			self.args.extend([ '/Rebuild', self.options['rebuild'] ])
+			self.args += [ '/Rebuild', self.options['rebuild'] ]
 
 		if 'clean' in self.options:
-			self.args.extend([ '/Clean', self.options['clean'] ])
+			self.args += [ '/Clean', self.options['clean'] ]
 
 		if 'deploy' in self.options:
-			self.args.extend([ '/Deploy', self.options['deploy'] ])
+			self.args += [ '/Deploy', self.options['deploy'] ]
 
 		if 'project' in self.options:
 			if not any(action in ['build', 'rebuild', 'clean', 'deploy'] for action in self.options):
 				raise UserError('Missing a "build", "rebuild", "clean", or "deploy" option in order to use "project".')
 
-			self.args.extend([ '/Project', self.options['project'] ])
+			self.args += [ '/Project', self.options['project'] ]
 
 		# commands
 
 		if 'command' in self.options:
-			self.args.extend([ '/Command', '"%s"' % self.options['command'] ])
-
-		self.args += self.additional_args
+			self.args += [ '/Command', '"%s"' % self.options['command'] ]
 
 		self.options['args'] = ' '.join(str(e) for e in self.args)
 
 	def install(self):
 		for a in self.artefacts:
-			self.options.created(os.path.abspath(a))
+			self.options.created(a)
 
 		self.runCommand(self.args, parseLine=self.parseLine)
 

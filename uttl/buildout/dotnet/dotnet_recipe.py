@@ -1,5 +1,3 @@
-import os.path
-
 from uttl.buildout.command_recipe import CommandRecipe
 from zc.buildout import UserError
 
@@ -16,7 +14,7 @@ class DotnetRecipe(CommandRecipe):
 
 	def install(self):
 		for a in self.artefacts:
-			self.options.created(os.path.abspath(a))
+			self.options.created(a)
 
 		self.runCommand(self.args)
 

@@ -10,15 +10,13 @@ class QtDeployRecipe(CommandRecipe):
 
 		self.options.setdefault('target', 'release')
 
-		self.args = []
-
 		# target
 
 		if self.options['target'] == 'debug':
-			self.args.append('--debug')
-			self.args.append('--pdb')
+			self.args += [ '--debug' ]
+			self.args += [ '--pdb' ]
 		else:
-			self.args.append('--release')
+			self.args += [ '--release' ]
 
 		# translations
 
@@ -26,61 +24,60 @@ class QtDeployRecipe(CommandRecipe):
 			translations = self.options['translations'].splitlines()
 			self.args += [ '--translations', ','.join(str(t) for t in translations) ]
 		else:
-			self.args.append('--no-translations')
+			self.args += [ '--no-translations' ]
 
 		# compiler runtime
 
 		if 'compiler-runtime' in self.options:
 			if self.options['compiler-runtime'] == '1':
-				self.args.append('--compiler-runtime')
+				self.args += [ '--compiler-runtime' ]
 			else:
-				self.args.append('--no-compiler-runtime')
+				self.args += [ '--no-compiler-runtime' ]
 
 		# webkit2
 
 		if 'webkit2' in self.options:
 			if self.options['webkit2'] == '1':
-				self.args.append('--webkit2')
+				self.args += [ '--webkit2' ]
 			else:
-				self.args.append('--no-webkit2')
+				self.args += [ '--no-webkit2' ]
 
 		# angle
 
 		if 'angle' in self.options:
 			if self.options['angle'] == '1':
-				self.args.append('--angle')
+				self.args += [ '--angle' ]
 			else:
-				self.args.append('--no-angle')
+				self.args += [ '--no-angle' ]
 
 		# software rasterizer
 
 		if 'opengl-sw' in self.options:
-			self.args.append('--no-opengl-sw')
+			self.args += [ '--no-opengl-sw' ]
 
 		# virtual keyboard
 
 		if 'virtual-keyboard' in self.options:
-			self.args.append('--no-virtualkeyboard')
+			self.args += [ '--no-virtualkeyboard' ]
 
 		# d3d
 
 		if 'system-d3d-compiler' in self.options:
-			self.args.append('--no-system-d3d-compiler')
-
-		# additional arguments
-
-		self.args += self.additional_args
+			self.args += [ '--no-system-d3d-compiler' ]
 
 		# target path
 
 		if not 'target-path' in self.options:
 			raise UserError('Missing mandatory "target-path" parameter.')
 
-		self.args.append(self.options['target-path'])
+		self.args += [ self.options['target-path'] ]
 
 		self.options['args'] = ' '.join(str(e) for e in self.args)
 
 	def install(self):
+		for a in self.artefacts:
+			self.options.created(a)
+
 		# build argument list
 
 		if 'vcvars' in self.options:
@@ -109,7 +106,7 @@ class QtDeployRecipe(CommandRecipe):
 		drive, tail = os.path.splitdrive(path)
 
 		if drive != '':
-			self.files.append(path)
+			self.files += [ path ]
 
 		return True
 

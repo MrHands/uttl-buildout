@@ -1,3 +1,4 @@
+import os.path
 import re
 
 from uttl.buildout.command_recipe import CommandRecipe
@@ -6,8 +7,6 @@ from zc.buildout import UserError
 class QmakeRecipe(CommandRecipe):
 	def __init__(self, buildout, name, options):
 		super().__init__(buildout, name, options, executable='qmake')
-
-		self.args = [ ]
 
 		if 'template' in self.options:
 			self.args += [ '-t', self.options['template'] ] 
@@ -33,7 +32,10 @@ class QmakeRecipe(CommandRecipe):
 		if not 'artefact-path' in self.options:
 			raise UserError('Missing mandatory "artefact-path" option.')
 
-		self.args += [ '-o', self.options['artefact-path'] ]
+		artefact_path = os.path.abspath(self.options['artefact-path'])
+		self.artefacts += [ artefact_path ]
+
+		self.args += [ '-o', artefact_path]
 
 		# inputs
 
@@ -42,15 +44,13 @@ class QmakeRecipe(CommandRecipe):
 
 		self.args += self.options['inputs'].splitlines()
 
-		self.args += self.additional_args
+		# combine arguments
 
 		self.options['args'] = ' '.join(str(e) for e in self.args)
 
 	def install(self):
-		self.options.created(self.options['artefact-path'])
-
 		for a in self.artefacts:
-			self.options.created(os.path.abspath(a))
+			self.options.created(a)
 
 		if 'vcvars' in self.options:
 			prefix_args = [ self.options['vcvars'], 'amd64', '&&' ]
