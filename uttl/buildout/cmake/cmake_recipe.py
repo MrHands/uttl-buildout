@@ -12,6 +12,8 @@ class CmakeRecipe(CommandRecipe):
 
 		# source
 
+		source_path = None
+
 		if 'source-path' in self.options:
 			source_path = os.path.abspath(self.options['source-path'])
 		elif 'install-path' in self.options:
