@@ -20,7 +20,7 @@ Path to the Visual Studio solution file (.sln) that will be passed to the execut
 
 `project` (optional)
 
-Project to run an action on, like `build`, `rebuild`, `clean`, or `deploy`. One of these actions must be specified for the `project` option to be considered valid.
+Name of the project in the solution to run an action on. Actions mean one of the `build`, `rebuild`, `clean`, or `deploy` options. If none are specified, this option is considered invalid and will throw an error.
 
 `build` (optional)
 
