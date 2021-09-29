@@ -8,16 +8,30 @@ class CmakeRecipe(CommandRecipe):
 	def __init__(self, buildout, name, options):
 		super().__init__(buildout, name, options, executable='cmake')
 
-		# source
-
-		source_path = None
+		# synonyms
 
 		if 'source-path' in self.options:
-			source_path = os.path.abspath(self.options['source-path'])
-		elif 'install-path' in self.options:
-			source_path = os.path.abspath(self.options['install-path'])
+			self.options['source-dir'] = self.options['source-path']
 
-		if not source_path:
+		if 'install-path' in self.options:
+			self.options['install-dir'] = self.options['install-path']
+
+		if 'configure-dir' in self.options:
+			self.options['configure-dir'] = self.options['configure-path']
+
+		if 'build-path' in self.options:
+			self.options['build-dir'] = self.options['build-path']
+
+		# source
+
+		source_dir = None
+
+		if 'source-dir' in self.options:
+			source_dir = os.path.abspath(self.options['source-dir'])
+		elif 'install-dir' in self.options:
+			source_dir = os.path.abspath(self.options['install-dir'])
+
+		if not source_dir:
 			raise UserError('Missing either "source-path" or "install-path" option.')
 
 		# generator
@@ -31,14 +45,15 @@ class CmakeRecipe(CommandRecipe):
 			if not 'generator' in self.options:
 				raise UserError('Missing mandatory "generator" option.')
 
-			self.args += [ '-S', source_path ]
+			self.args += [ '-S', source_dir ]
 
-			self.args += [ '-B', os.path.abspath(self.options['configure-path']) ]
+			self.working_dir = os.path.abspath(self.options['configure-path'])
+			self.args += [ '-B', self.working_dir ]
 		else:
-			if not 'build-path' in self.options:
-				raise UserError('Missing mandatory "build-path" option.')
+			if not 'build-dir' in self.options:
+				raise UserError('Missing mandatory "build-dir" option.')
 
-			self.args += [ '--build', os.path.abspath(self.options['build-path']) ]
+			self.args += [ '--build', os.path.abspath(self.options['build-dir']) ]
 
 			if 'target' in self.options:
 				self.args += [ '--target', self.options['target'] ]
@@ -62,9 +77,9 @@ class CmakeRecipe(CommandRecipe):
 
 		self.var_args = []
 
-		if 'install-path' in self.options:
-			install_path = os.path.abspath(self.options['install-path'])
-			self.options['var-CMAKE_INSTALL_PREFIX'] = os.path.abspath(install_path) + ':PATH'
+		if 'install-dir' in self.options:
+			install_dir = os.path.abspath(self.options['install-dir'])
+			self.options['var-CMAKE_INSTALL_PREFIX'] = os.path.abspath(install_dir) + ':PATH'
 
 		split_name = re.compile(r'var-(.+)')
 		split_type = re.compile(r'(.+):(\w*)$')
@@ -101,29 +116,11 @@ class CmakeRecipe(CommandRecipe):
 
 			self.var_args += [ '-G', self.options['generator'] ]
 
-			self.var_args += [ '-S', source_path ]
+			self.var_args += [ '-S', source_dir ]
 
 			self.var_args += self.additional_args
 
-	def install(self):
-		# add manual artefact (e.g. generated solution)
-
-		for a in self.artefacts:
-			self.options.created(a)
-
-		# change to configure path
-
-		self.working_dir = os.getcwd()
-		configure_path = None
-
-		if 'configure-path' in self.options:
-			configure_path = os.path.abspath(self.options['configure-path'])
-
-			if not os.path.exists(configure_path):
-				os.makedirs(configure_path, 0o777, True)
-
-			os.chdir(configure_path)
-
+	def command_install(self):
 		# set variables
 
 		if len(self.var_args) > 0:
@@ -132,13 +129,6 @@ class CmakeRecipe(CommandRecipe):
 		# run command
 
 		self.runCommand(self.args, parseLine=self.parseLine)
-
-		# back to working directory
-
-		if configure_path:
-			os.chdir(self.working_dir)
-
-		return self.options.created()
 
 	check_errors = re.compile(r'.*Error: (.*)')
 	check_failed = re.compile(r'.*(Build FAILED|CMake Error|MSBUILD : error).*')
