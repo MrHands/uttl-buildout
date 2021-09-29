@@ -1,7 +1,5 @@
 import configparser
 import os.path
-import re
-import subprocess
 import types
 
 from uttl.buildout.base_recipe import BaseRecipe
@@ -18,8 +16,10 @@ class VersionCheckRecipe(BaseRecipe):
 		self.options.setdefault('version-minor', '0')
 		self.options.setdefault('version-debug', '0')
 
-		# convert body into function
-		# adapted from mr.scripty
+		# convert body into function, adapted from mr.scripty
+
+		if not 'body' in self.options:
+			raise UserError('Missing mandatory "body" option.')
 
 		newbody = 'def checkVersion(self):\n'
 		indent = True
