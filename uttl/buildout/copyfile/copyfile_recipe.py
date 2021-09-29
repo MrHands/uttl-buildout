@@ -1,4 +1,3 @@
-import logging
 import os
 import shutil
 
@@ -9,23 +8,31 @@ class CopyFileRecipe(BaseRecipe):
 	def __init__(self, buildout, name, options):
 		super().__init__(buildout, name, options)
 
-		self.options.setdefault('source-path', os.getcwd())
-		self.options.setdefault('destination-path', os.getcwd())
+		self.options.setdefault('source-dir', os.getcwd())
+		self.options.setdefault('destination-dir', os.getcwd())
+
+		# synonyms
+
+		if 'source-path' in self.options:
+			self.options['source-dir'] = self.options['source-path']
+
+		if 'destination-path' in self.options:
+			self.options['destination-dir'] = self.options['destination-path']
 
 		# paths
 
-		self.src_path = os.path.abspath(self.options['source-path'])
+		self.src_dir = os.path.abspath(self.options['source-dir'])
 
-		self.dst_path = os.path.abspath(self.options['destination-path'])
-		if not os.path.exists(self.dst_path):
-			os.makedirs(self.dst_path, 0o777, True)
+		self.dst_dir = os.path.abspath(self.options['destination-dir'])
+		if not os.path.exists(self.dst_dir):
+			os.makedirs(self.dst_dir, 0o777, True)
 
 		# get files
 
 		if not 'files' in self.options:
 			raise UserError('Missing mandatory "files" option.')
 
-		self.files = [os.path.join(self.dst_path, file) for file in self.options['files'].splitlines()]
+		self.files = [os.path.join(self.dst_dir, file) for file in self.options['files'].splitlines()]
 
 	def install(self):
 		self.log.debug(str(self.files))
@@ -36,7 +43,7 @@ class CopyFileRecipe(BaseRecipe):
 		for dst_path in self.files:
 			filename = os.path.basename(dst_path)
 
-			src_path = os.path.join(self.src_path, filename)
+			src_path = os.path.join(self.src_dir, filename)
 
 			# check if file is missing
 
