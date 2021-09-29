@@ -48,18 +48,13 @@ class QmakeRecipe(CommandRecipe):
 
 		self.options['args'] = ' '.join(str(e) for e in self.args)
 
-	def install(self):
-		for a in self.artefacts:
-			self.options.created(a)
-
+	def command_install(self):
 		if 'vcvars' in self.options:
 			prefix_args = [ self.options['vcvars'], 'amd64', '&&' ]
 		else:
 			prefix_args = []
 
 		self.runCommand(self.args, prefixArgs=prefix_args, parseLine=self.parseLine)
-
-		return self.options.created()
 
 	check_errors = re.compile(r'.*ERROR:\s*(.*)')
 
