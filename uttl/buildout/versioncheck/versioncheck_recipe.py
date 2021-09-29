@@ -1,5 +1,7 @@
 import configparser
-import os.path
+import os
+import re
+import subprocess
 import types
 
 from uttl.buildout.base_recipe import BaseRecipe
