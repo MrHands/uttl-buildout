@@ -8,17 +8,21 @@ Calls the Inklecate compiler executable to compile .ink files into .json files.
 
 Path to the executable used to run commands. You don't need to set this if the executable was added to the system-wide `PATH` environment variable.
 
+`inputs` (mandatory)
+
+List of .ink files to compile using Inklecate.
+
 `always-install` (optional)
 
 Set this option to 1 to skip checks for missing installed files and always run the script.
 
-`output-directory` (optional)
+`working-dir` (optional)
 
-Directory where the  Defaults to the current directory.
+Change to this directory before executing the command.
 
-`input` (mandatory)
+`output-dir` (optional)
 
-List of .ink files to compile using Inklecate.
+Directory where the files are built to. Defaults to the current directory.
 
 `artefacts` (optional)
 
@@ -30,14 +34,11 @@ Additional list of arguments that are added to the executable _before_ the argum
 
 ## Example - Build narrative source files to JSON using inklecate
 
-	[buildout]
-	parts = ink
-
 	[ink]
 	recipe = uttl.buildout:inklecate
 	executable = C:\inklecate-0.9.0\inklecate.exe
-	input =
+	inputs =
 		C:\Projects\SSSG\source\narrative\todo_mechanic.ink
 		C:\Projects\SSSG\source\narrative\todo_diplomate.ink
 		C:\Projects\SSSG\source\narrative\todo_amazon.ink
-	output-directory = C:\Projects\SSSG\build\data\stories
+	output-dir = C:\Projects\SSSG\build\data\stories

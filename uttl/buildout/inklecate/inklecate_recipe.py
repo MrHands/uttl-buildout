@@ -9,28 +9,35 @@ class InklecateRecipe(CommandRecipe):
 	def __init__(self, buildout, name, options):
 		super().__init__(buildout, name, options, executable='inklecate.exe')
 
-		self.options.setdefault('output-directory', '')
+		self.options.setdefault('output-dir', '')
 
-		self.output_directory = self.options['output-directory']
+		# synonyms
+
+		if 'output-directory' in self.options:
+			self.options['output-dir'] = self.options['output-directory']
+
+		if 'input' in self.options:
+			self.options['inputs'] = self.options['input']
+
+		# output directory
+
+		self.output_directory = self.options['output-dir']
 
 		# resolve input files
 
 		if not 'input' in self.options:
 			raise UserError('Missing mandatory "input" parameter.')
 
-		self.input_resolved = []
-		for i in self.options['input'].splitlines():
-			self.input_resolved.extend([os.path.abspath(f) for f in glob.glob(i) if os.path.isfile(f)])
+		self.inputs_resolved = []
+		for i in self.options['inputs'].splitlines():
+			self.inputs_resolved.extend([os.path.abspath(f) for f in glob.glob(i) if os.path.isfile(f)])
 
-		self.options['input_resolved'] = ' '.join(str(e) for e in self.input_resolved)
+		self.options['inputs_resolved'] = ' '.join(str(e) for e in self.inputs_resolved)
 
-	def install(self):
-		for a in self.artefacts:
-			self.options.created(a)
-
+	def command_install(self):
 		# resolve output files
 
-		for i in self.input_resolved:
+		for i in self.inputs_resolved:
 			if not os.path.exists(i):
 				continue
 
@@ -47,8 +54,6 @@ class InklecateRecipe(CommandRecipe):
 			self.runCommand(args)
 
 			self.log.info('Compiled ink to "%s.json".' % filename)
-
-		return self.options.created()
 
 def uninstall(name, options):
 	pass
