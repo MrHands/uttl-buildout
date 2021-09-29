@@ -26,6 +26,21 @@ class QtDeployRecipe(CommandRecipe):
 		else:
 			self.args += [ '--no-translations' ]
 
+		# qml directory
+
+		if 'qml-dir' in self.options:
+			self.args += [ '--qmldir', os.path.abspath(self.options['qml-dir']) ]
+
+		# qml import
+
+		if 'qml-import' in self.options:
+			self.args += [ '--qmlimport', os.path.abspath(self.options['qml-import']) ]
+
+		# plugins
+
+		if 'plugins' in self.options:
+			self.args += [ '--no-plugins' ]
+
 		# compiler runtime
 
 		if 'compiler-runtime' in self.options:
@@ -64,6 +79,11 @@ class QtDeployRecipe(CommandRecipe):
 
 		if 'system-d3d-compiler' in self.options:
 			self.args += [ '--no-system-d3d-compiler' ]
+
+		# patch qt
+
+		if 'patch-qt' in self.options:
+			self.args += [ '--no-patchqt' ]
 
 		# target path
 

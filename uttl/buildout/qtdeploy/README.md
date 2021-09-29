@@ -26,9 +26,21 @@ Path to `vcvarsall.bat`, a script file used to determine the install path of Vis
 
 `translations` (optional)
 
-List of translated languages to deploy, e.g. fr, uk, de. Leaving this option blank will skip deployment of translations.
+List of translated languages to deploy, e.g. fr, uk, de. Leaving this option blank will skip deployment of translations and set `--no-translations`.
 
-`compiler-runtime` (optional)
+`qml-dir` (optional)
+
+Path to directory that will be scanned for QML imports. Option is required for deploying `Qt5Qml.dll`.
+
+`qml-import` (optional)
+
+Add a path to the search locations for importing QML modules.
+
+`plugins` (default: 1)
+
+Set this option to 0 to skip deployment of plugins.
+
+`compiler-runtime` (default: 1)
 
 Force deployment of compiler runtime libraries by setting this option to 1. Disable deployment by setting it to 0.
 
@@ -36,7 +48,7 @@ Force deployment of compiler runtime libraries by setting this option to 1. Disa
 
 Force deployment of WebKit2 libraries by setting this option to 1. Disable deployment by setting it to 0.
 
-`angle` (optional
+`angle` (optional)
 
 Force deployment of ANGLE libraries by setting this option to 1. Disable deployment by setting it to 0.
 
@@ -51,6 +63,10 @@ Disable deployment of the Virtual Keyboard libraries by setting this option to 0
 `system-d3d-compiler` (default: 1)
 
 Disable deployment of the system Direct3D compiler libraries by setting this option to 0.
+
+`patch-qt` (default: 1)
+
+Set this option to 0 to disable patching the Qt5Core library.
 
 `artefacts` (optional)
 
