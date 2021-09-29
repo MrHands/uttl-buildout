@@ -8,6 +8,10 @@ Calls an executable with a list of arguments.
 
 Path to the executable used to run commands.
 
+`working-dir` (optional)
+
+Change to this directory before executing the command.
+
 `always-install` (optional)
 
 Set this option to 1 to skip checks for missing installed files and always run the script.

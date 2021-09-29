@@ -10,6 +10,7 @@ class CommandRecipe(BaseRecipe):
 		super().__init__(buildout, name, options)
 
 		self.options.setdefault('executable', executable)
+		self.options.setdefault('working-dir', os.getcwd())
 
 		# always install
 		
@@ -17,6 +18,11 @@ class CommandRecipe(BaseRecipe):
 
 		if 'always-install' in self.options:
 			self.always_install = self.options['always-install'] == '1'
+
+		# working directory
+
+		if 'working-dir' in self.options:
+			self.working_dir = os.path.abspath(self.options['working-dir'])
 
 		# artefacts
 
@@ -35,12 +41,32 @@ class CommandRecipe(BaseRecipe):
 		self.args = self.additional_args
 
 	def install(self):
+		# register installed artefacts
+
 		for a in self.artefacts:
 			self.options.created(a)
 
-		self.runCommand(self.args)
+		# switch working directory
+
+		prev_dir = None
+
+		if self.working_dir:
+			prev_dir = os.getcwd()
+			os.chdir(self.working_dir)
+
+		# run command
+
+		self.command_install()
+
+		# back to previous directory
+
+		if self.working_dir:
+			os.chdir(prev_dir)
 
 		return self.options.created()
+
+	def command_install(self):
+		self.runCommand(self.args)
 
 	def update(self):
 		if self.always_install:
