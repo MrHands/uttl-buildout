@@ -5,13 +5,5 @@ class DotnetRecipe(CommandRecipe):
 	def __init__(self, buildout, name, options):
 		super().__init__(buildout, name, options, executable='dotnet')
 
-	def install(self):
-		for a in self.artefacts:
-			self.options.created(a)
-
-		self.runCommand(self.args)
-
-		return self.options.created()
-
 def uninstall(name, options):
 	pass

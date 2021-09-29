@@ -4,19 +4,23 @@ Uses NuGet to restore .NET packages on a Visual Studio project.
 
 ## Options
 
+`executable` (default: "cmake")
+
+Path to the executable used to run commands. You don't need to set this if the executable was added to the system-wide `PATH` environment variable.
+
 `project-path` (required)
 
 Path to Visual Studio project file that will be processed.
 
-`executable` (default: "cmake")
+`working-dir` (optional)
 
-Path to the executable used to run commands. You don't need to set this if the executable was added to the system-wide `PATH` environment variable.
+Change to this directory before executing the command.
 
 `always-install` (optional)
 
 Set this option to 1 to skip checks for missing installed files and always run the script.
 
-`config-file` (optional)
+`config-path` (optional)
 
 Path to a configuration file for NuGet to use. Only the settings from this file will be used if this option is specified.
 
@@ -56,7 +60,7 @@ Set this option to 0 to disable caching HTTP requests.
 
 Set this option to 0 to only restore the root project and not any of the project it references.
 
-`packages-path` (optional)
+`packages-dir` (optional)
 
 Directory for restored packages.
 
@@ -88,4 +92,4 @@ Additional list of arguments that are added to the executable _before_ the argum
 
 	[server-build-inkwrapper]
 	recipe = uttl.buildout:dotnet-restore
-	inputs = dependencies\InkWrapper\InkWrapper.csproj
+	project-path = dependencies\InkWrapper\InkWrapper.csproj

@@ -8,12 +8,15 @@ class DotnetRestoreRecipe(DotnetRecipe):
 	def __init__(self, buildout, name, options):
 		super().__init__(buildout, name, options)
 
-		# dotnet restore [<ROOT>] [--configfile <FILE>] [--disable-parallel]
-		#	[-f|--force] [--force-evaluate] [--ignore-failed-sources]
-		#	[--interactive] [--lock-file-path <LOCK_FILE_PATH>] [--locked-mode]
-		#	[--no-cache] [--no-dependencies] [--packages <PACKAGES_DIRECTORY>]
-		#	[-r|--runtime <RUNTIME_IDENTIFIER>] [-s|--source <SOURCE>]
-		#	[--use-lock-file] [-v|--verbosity <LEVEL>]
+		# synonyms
+
+		if 'config-file' in self.options:
+			self.options['config-path'] = self.options['config-file']
+
+		if 'packages-path' in self.options:
+			self.options['packages-dir'] = self.options['packages-path']
+
+		# arguments
 
 		self.args += [ 'restore' ]
 
@@ -24,8 +27,8 @@ class DotnetRestoreRecipe(DotnetRecipe):
 
 		self.args += [ os.path.abspath(self.options['project-path']) ]
 
-		if 'config-file' in self.options:
-			self.args += [ '--configfile', os.path.abspath(self.options['config-file']) ]
+		if 'config-path' in self.options:
+			self.args += [ '--configfile', os.path.abspath(self.options['config-path']) ]
 
 		if 'parallel' in self.options and self.options['parallel'] == '0':
 			self.args += [ '--disable-parallel' ]
@@ -54,8 +57,8 @@ class DotnetRestoreRecipe(DotnetRecipe):
 		if 'dependencies' in self.options and self.options['dependencies'] == '0':
 			self.args += [ '--no-dependencies' ]
 
-		if 'packages-path' in self.options:
-			self.args += [ '--packages', os.path.abspath(self.options['packages-path']) ]
+		if 'packages-dir' in self.options:
+			self.args += [ '--packages', os.path.abspath(self.options['packages-dir']) ]
 
 		if 'runtime' in self.options:
 			self.args += [ '--runtime', self.options['runtime'] ]

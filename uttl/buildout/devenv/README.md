@@ -56,10 +56,6 @@ Additional list of arguments that are added to the executable _before_ the argum
 
 ## Example - Build the game in Release
 
-	[buildout]
-	parts = 
-		server-build-exe
-
 	[server-build-exe]
 	recipe = uttl.buildout:devenv
 	executable = ${devenv:path}
