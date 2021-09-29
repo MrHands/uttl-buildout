@@ -8,10 +8,17 @@ class DevenvRecipe(CommandRecipe):
 	def __init__(self, buildout, name, options):
 		super().__init__(buildout, name, options, executable='devenv.com')
 
-		if not 'solution' in self.options:
-			raise UserError('Missing mandatory "solution" option.')
+		# synonyms
 
-		self.args += [ os.path.abspath(self.options['solution']) ]
+		if 'solution' in self.options:
+			self.options['solution-path'] = self.options['solution']
+
+		# solution
+
+		if not 'solution-path' in self.options:
+			raise UserError('Missing mandatory "solution-path" option.')
+
+		self.args += [ os.path.abspath(self.options['solution-path']) ]
 
 		# actions on a project
 
@@ -40,13 +47,8 @@ class DevenvRecipe(CommandRecipe):
 
 		self.options['args'] = ' '.join(str(e) for e in self.args)
 
-	def install(self):
-		for a in self.artefacts:
-			self.options.created(a)
-
+	def command_install(self):
 		self.runCommand(self.args, parseLine=self.parseLine)
-
-		return self.options.created()
 
 	check_errors = re.compile(r'.*Error: (.*)')
 	check_failed = re.compile(r'.*(Build FAILED).*')
