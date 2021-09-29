@@ -18,6 +18,21 @@ class QtDeployRecipe(CommandRecipe):
 		else:
 			self.args += [ '--release' ]
 
+		# dir
+
+		if 'dir' in self.options:
+			self.args += [ '--dir', os.path.abspath(self.options['dir']) ]
+
+		# libraries dir
+
+		if 'libraries-dir' in self.options:
+			self.args += [ '--libdir', os.path.abspath(self.options['libraries-dir']) ]
+
+		# plugins dir
+
+		if 'plugins-dir' in self.options:
+			self.args += [ '--plugindir', os.path.abspath(self.options['plugins-dir']) ]
+
 		# translations
 
 		if 'translations' in self.options:

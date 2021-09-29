@@ -24,6 +24,18 @@ Deploy either `debug` or `release` versions of Qt libraries. The debug target wi
 
 Path to `vcvarsall.bat`, a script file used to determine the install path of Visual Studio. Only required if you want to deploy the installer for the relevant version of the Visual C++ runtime.
 
+`dir` (optional)
+
+Alternative directory to deploy all files to instead of the directory that contains the target executable.
+
+`libraries-dir` (optional)
+
+Alternative directory to deploy libraries to instead of the directory that contains the target executable.
+
+`plugins-dir` (optional)
+
+Alternative directory to deploy plugins to instead of the directory that contains the target executable.
+
 `translations` (optional)
 
 List of translated languages to deploy, e.g. fr, uk, de. Leaving this option blank will skip deployment of translations and set `--no-translations`.
