@@ -12,6 +12,10 @@ Path to the executable used to run commands. You don't need to set this if the e
 
 Path to the executable that the Qt deployment tool will inspect for dependencies.
 
+`working-dir` (optional)
+
+Change to this directory before executing the command.
+
 `always-install` (optional)
 
 Set this option to 1 to skip checks for missing installed files and always run the script.

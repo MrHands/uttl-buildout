@@ -195,10 +195,7 @@ class QtDeployRecipe(CommandRecipe):
 
 		self.options['args'] = ' '.join(str(e) for e in self.args)
 
-	def install(self):
-		for a in self.artefacts:
-			self.options.created(a)
-
+	def command_install(self):
 		# build argument list
 
 		if 'vcvars' in self.options:
@@ -218,8 +215,6 @@ class QtDeployRecipe(CommandRecipe):
 		# copy files
 
 		self.runCommand(self.args, prefixArgs=prefix_args)
-
-		return self.options.created()
 
 	def parseFileList(self, path):
 		drive, tail = os.path.splitdrive(path)
