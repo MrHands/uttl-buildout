@@ -108,9 +108,84 @@ class QtDeployRecipe(CommandRecipe):
 		# target path
 
 		if not 'target-path' in self.options:
-			raise UserError('Missing mandatory "target-path" parameter.')
+			raise UserError('Missing mandatory "target-path" option.')
 
 		self.args += [ self.options['target-path'] ]
+
+		# libraries
+
+		split_name = re.compile(r'lib-(.+)')
+		libs_allowed = [
+			'bluetooth',
+			'concurrent',
+			'core',
+			'declarative',
+			'designer',
+			'designercomponents',
+			'enginio',
+			'gamepad',
+			'gui',
+			'qthelp',
+			'multimedia',
+			'multimediawidgets',
+			'multimediaquick',
+			'network',
+			'nfc',
+			'opengl',
+			'positioning',
+			'printsupport',
+			'qml',
+			'qmltooling',
+			'quick',
+			'quickparticles',
+			'quickwidgets',
+			'script',
+			'scripttools',
+			'sensors',
+			'serialport',
+			'sql',
+			'svg',
+			'test',
+			'webkit',
+			'webkitwidgets',
+			'websockets',
+			'widgets',
+			'winextras',
+			'xml',
+			'xmlpatterns',
+			'webenginecore',
+			'webengine',
+			'webenginewidgets',
+			'3dcore',
+			'3drenderer',
+			'3dquick',
+			'3dquickrenderer',
+			'3dinput',
+			'3danimation',
+			'3dextras',
+			'geoservices',
+			'webchannel',
+			'texttospeech',
+			'serialbus',
+			'webview',
+		]
+
+		for lib in [lib for lib in list(self.options.keys()) if lib.startswith('lib-')]:
+			# get name
+
+			match = split_name.match(lib)
+			if not match:
+				raise UserError('Failed to split library name for "%s".' % (lib))
+
+			lib_name = match.group(1)
+
+			if not lib_name in libs_allowed:
+				raise UserError('Invalid library option "%s".' % (lib_name))
+
+			if self.options[lib] == '1':
+				self.args += [ '-%s' % lib_name ]
+			else:
+				self.args += [ '-no-%s' % lib_name ]
 
 		self.options['args'] = ' '.join(str(e) for e in self.args)
 

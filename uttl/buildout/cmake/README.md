@@ -50,7 +50,7 @@ Configuration to build from the generated environment using the specified genera
 
 `var-<NAME> = <VALUE>:<TYPE>` (optional)
 
-Every option that starts with `var-` is interpreted as a variable that needs to be passed to CMake when configuring or building. The value type is `STRING` by default and can be specified by appending `:` and the type to the value after the `=` in the buildout configuration. Valid types are `BOOL`, `FILEPATH`, `PATH`, `STRING`, and `INTERNAL`.
+Options that starts with `var-` are interpreted as a variable that needs to be passed to CMake when configuring or building. The value type is `STRING` by default and can be specified by appending `:` and the type to the value after the `=` in the buildout configuration. Valid types are `BOOL`, `FILEPATH`, `PATH`, `STRING`, and `INTERNAL`.
 
 `artefacts` (optional)
 

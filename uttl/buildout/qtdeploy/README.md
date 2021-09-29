@@ -42,7 +42,7 @@ List of translated languages to deploy, e.g. fr, uk, de. Leaving this option bla
 
 `qml-dir` (optional)
 
-Path to directory that will be scanned for QML imports. Option is required for deploying `Qt5Qml.dll`.
+Path to directory that will be scanned for QML imports.
 
 `qml-import` (optional)
 
@@ -84,6 +84,10 @@ Disable deployment of the system Direct3D compiler libraries by setting this opt
 
 Set this option to 0 to disable patching the Qt5Core library.
 
+`lib-<NAME> = 1 or 0` (optional)
+
+Options that starts with `lib-` are interpreted as libraries that need to be added to or removed from deployment. Set to 1 to ensure the library is deployed or 0 to skip deployment.
+
 `artefacts` (optional)
 
 Additional list of files that will be installed by the recipe but are not picked up automatically.
@@ -106,3 +110,4 @@ Additional list of arguments that are added to the executable _before_ the argum
 		de
 		fr
 	virtual-keyboard = 0
+	lib-qml = 1
