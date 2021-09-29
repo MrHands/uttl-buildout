@@ -69,7 +69,7 @@ The following recipes (scripts) for `zc.buildout` are available in this package:
 * [uttl.buildout.command](uttl/buildout/README.md) - Run an executable with arguments
 * [uttl.buildout.copyfile](uttl/buildout/copyfile/README.md) - Copy files between directories
 * [uttl.buildout.devenv](uttl/buildout/devenv/README.md) - Build projects with Visual Studio
-* [uttl.buildout.dotnet.restore](uttl/buildout/dotnet/restore/README.md) - Restore .NET packages
+* [uttl.buildout.dotnet-restore](uttl/buildout/dotnet/restore/README.md) - Restore .NET packages
 * [uttl.buildout.inklecate](uttl/buildout/inklecate/README.md) - Compile .ink files to JSON
 * [uttl.buildout.qmake](uttl/buildout/qmake/README.md) - Run QMake commands
 * [uttl.buildout.qtdeploy](uttl/buildout/qtdeploy/README.md) - Deploy Qt libraries

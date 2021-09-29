@@ -17,8 +17,12 @@ class DotnetRestoreRecipe(DotnetRecipe):
 
 		self.args += [ 'restore' ]
 
-		for i in self.inputs:
-			self.args.append(os.path.abspath(i))
+		# project-path
+
+		if not 'project-path' in self.options:
+			raise UserError('Missing mandatory "project-path" option.')
+
+		self.args += [ os.path.abspath(self.options['project-path']) ]
 
 		if 'config-file' in self.options:
 			self.args += [ '--configfile', os.path.abspath(self.options['config-file']) ]

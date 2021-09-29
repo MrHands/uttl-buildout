@@ -4,9 +4,9 @@ Uses NuGet to restore .NET packages on a Visual Studio project.
 
 ## Options
 
-`inputs` (required)
+`project-path` (required)
 
-List of project files to process.
+Path to Visual Studio project file that will be processed.
 
 `executable` (default: "cmake")
 
@@ -87,5 +87,5 @@ Additional list of arguments that are added to the executable _before_ the argum
 ## Example - Restore packages for a C\# project
 
 	[server-build-inkwrapper]
-	recipe = uttl.buildout:dotnet.restore
+	recipe = uttl.buildout:dotnet-restore
 	inputs = dependencies\InkWrapper\InkWrapper.csproj
