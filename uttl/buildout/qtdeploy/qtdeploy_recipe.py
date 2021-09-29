@@ -105,13 +105,6 @@ class QtDeployRecipe(CommandRecipe):
 		if 'patch-qt' in self.options:
 			self.args += [ '--no-patchqt' ]
 
-		# target path
-
-		if not 'target-path' in self.options:
-			raise UserError('Missing mandatory "target-path" option.')
-
-		self.args += [ self.options['target-path'] ]
-
 		# libraries
 
 		split_name = re.compile(r'lib-(.+)')
@@ -179,13 +172,26 @@ class QtDeployRecipe(CommandRecipe):
 
 			lib_name = match.group(1)
 
+			# check if library is valid
+
 			if not lib_name in libs_allowed:
 				raise UserError('Invalid library option "%s".' % (lib_name))
+
+			# add or remove from deployment
 
 			if self.options[lib] == '1':
 				self.args += [ '-%s' % lib_name ]
 			else:
 				self.args += [ '-no-%s' % lib_name ]
+
+		# target path
+
+		if not 'target-path' in self.options:
+			raise UserError('Missing mandatory "target-path" option.')
+
+		self.args += [ self.options['target-path'] ]
+
+		# compile arguments
 
 		self.options['args'] = ' '.join(str(e) for e in self.args)
 
