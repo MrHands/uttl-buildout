@@ -41,6 +41,11 @@ class QtDeployRecipe(CommandRecipe):
 		if 'plugins' in self.options:
 			self.args += [ '--no-plugins' ]
 
+		# libraries
+
+		if 'libraries' in self.options:
+			self.args += [ '--no-libraries' ]
+
 		# compiler runtime
 
 		if 'compiler-runtime' in self.options:
@@ -105,20 +110,18 @@ class QtDeployRecipe(CommandRecipe):
 		else:
 			prefix_args = []
 
-		# get list of files
+		# track files that will be installed
 
 		self.files = []
+
 		self.runCommand([ '--list', 'target' ] + self.args, prefixArgs=prefix_args, parseLine=self.parseFileList, quiet=True)
+
+		for f in self.files:
+			self.options.created(f)
 
 		# copy files
 
 		self.runCommand(self.args, prefixArgs=prefix_args)
-
-		# check if files have been copied
-
-		copied = [f for f in self.files if os.path.exists(f)]
-		for f in copied:
-			self.options.created(f)
 
 		return self.options.created()
 

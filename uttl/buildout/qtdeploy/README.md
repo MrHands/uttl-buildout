@@ -40,6 +40,10 @@ Add a path to the search locations for importing QML modules.
 
 Set this option to 0 to skip deployment of plugins.
 
+`libraries` (default: 1)
+
+Set this option to 0 to skip deployment of libraries.
+
 `compiler-runtime` (default: 1)
 
 Force deployment of compiler runtime libraries by setting this option to 1. Disable deployment by setting it to 0.
