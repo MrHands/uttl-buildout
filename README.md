@@ -81,7 +81,7 @@ The following recipes (scripts) for `zc.buildout` are available in this package:
 
 Check the source folders for detailed documentation about each recipe.
 
-# Building from source
+# Testing locally
 
 Check that you're running at least Python 3.9:
 
@@ -92,13 +92,11 @@ Build and install egg on system:
 
     python setup.py install
 
+# Uploading new package
+
 Create egg in `dist/` folder:
 
     python setup.py bdist_egg
-
-Install on your system using `easy_install`:
-
-    python -m easy_install -a dist\uttl_buildout-1.0.0-py3.9.egg
 
 Upload packaged egg to repository:
 
