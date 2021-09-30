@@ -21,6 +21,8 @@ class CommandRecipe(BaseRecipe):
 
 		# working directory
 
+		self.working_dir = None
+
 		if 'working-dir' in self.options:
 			self.working_dir = os.path.abspath(self.options['working-dir'])
 
