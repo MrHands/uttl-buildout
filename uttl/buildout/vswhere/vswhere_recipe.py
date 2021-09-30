@@ -9,7 +9,57 @@ class VsWhereRecipe(CommandRecipe):
 		super().__init__(buildout, name, options, executable=r'%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe')
 
 		if 'version' in self.options:
-			self.args += [ '-version', self.options['version'] ]
+			version = self.options['version']
+			versions_map = {
+				'latest': {
+					'dev': 'latest',
+					'legacy': False
+				},
+				'2019': {
+					'dev': '16',
+					'legacy': False
+				},
+				'2017': {
+					'dev': '15',
+					'legacy': False
+				},
+				'2015': {
+					'dev': '14',
+					'legacy': False
+				},
+				'2013': {
+					'dev': '12',
+					'legacy': False
+				},
+				'2012': {
+					'dev': '11',
+					'legacy': False
+				},
+				'2010': {
+					'dev': '10',
+					'legacy': True
+				},
+				'2008': {
+					'dev': '9',
+					'legacy': True
+				},
+				'2005': {
+					'dev': '8',
+					'legacy': True
+				},
+			}
+			if not version in versions_map:
+				raise UserError('Unhandled Visual Studio version "%s".' % (version))
+
+			version = versions_map[version]
+
+			if version['dev'] == 'latest':
+				self.args += [ '-latest' ]
+			else:
+				if version['legacy']:
+					self.args += [ '-legacy' ]
+
+				self.args += [ '-version', version['dev'] ]
 
 		if 'latest' in self.options:
 			self.args += [ '-latest' ]
