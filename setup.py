@@ -32,7 +32,9 @@ setup(name = 'uttl.buildout',
 	description = 'Utilities for Buildout developed for Up There They Love.',
 	long_description =
 		get_text_from_file('README.md') +
-		get_text_from_file('CHANGES.md'),
+		get_text_from_file('CHANGES.md') +
+		"# License\n" +
+		get_text_from_file('LICENSE'),
 	long_description_content_type = 'text/markdown',
 	keywords = 'buildout extension uttl cmake qmake qt copyfile version',
 	classifiers = [
@@ -54,7 +56,7 @@ setup(name = 'uttl.buildout',
 		'zc.buildout'
 	],
 	tests_require = [ 'mock' ],
-	python_requires = '>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
+	python_requires = '>=3',
 	test_suite = 'uttl.buildout.tests',
 	entry_points = { 
 		'zc.buildout': [
