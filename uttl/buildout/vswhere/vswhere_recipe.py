@@ -51,20 +51,20 @@ class VsWhereRecipe(CommandRecipe):
 			if not version in versions_map:
 				raise UserError('Unhandled Visual Studio version "%s".' % (version))
 
-			version = versions_map[version]
+			self.version = versions_map[version]
 
-			if version['dev'] == 'latest':
+			if self.version['dev'] == 'latest':
 				self.args += [ '-latest' ]
 			else:
-				if version['legacy']:
+				if self.version['legacy']:
 					self.args += [ '-legacy' ]
 
-				self.args += [ '-version', version['dev'] ]
+				self.args += [ '-version', self.version['dev'] ]
 
 		if 'latest' in self.options:
 			self.args += [ '-latest' ]
 
-		if 'install-path' in self.options:
+		if 'get-install-path' in self.options:
 			self.args += [ '-property', 'installationPath' ]
 
 		# set pre=Microsoft.VisualStudio.Product.
