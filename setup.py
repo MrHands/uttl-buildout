@@ -69,6 +69,7 @@ setup(name = 'uttl.buildout',
 			'qmake = uttl.buildout.qmake.qmake_recipe:QmakeRecipe',
 			'qtdeploy = uttl.buildout.qtdeploy.qtdeploy_recipe:QtDeployRecipe',
 			'versioncheck = uttl.buildout.versioncheck.versioncheck_recipe:VersionCheckRecipe',
+			'vswhere = uttl.buildout.vswhere.vswhere_recipe:VsWhereRecipe',
 		],
 		'zc.buildout.uninstall': [
 			'cmake = uttl.buildout.cmake.cmake_recipe:uninstall',
@@ -80,6 +81,7 @@ setup(name = 'uttl.buildout',
 			'qmake = uttl.buildout.qmake.qmake_recipe:uninstall',
 			'qtdeploy = uttl.buildout.qtdeploy.qtdeploy_recipe:uninstall',
 			'versioncheck = uttl.buildout.versioncheck.versioncheck_recipe:uninstall',
+			'vswhere = uttl.buildout.vswhere.vswhere_recipe:uninstall',
 		]
 	},
 )
