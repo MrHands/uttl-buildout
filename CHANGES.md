@@ -1,5 +1,9 @@
 # Changes
 
+## 1.2.3 - 2021-09-30
+
+* Added missing package initialization for `uttl.buildout.dotnet.restore` folder
+
 ## 1.2.2 - 2021-09-30
 
 * Small fix to README in package
