@@ -33,7 +33,7 @@ setup(name = 'uttl.buildout',
 	long_description =
 		get_text_from_file('README.md') +
 		get_text_from_file('CHANGES.md') +
-		"# License\n" +
+		"\n# License\n\n" +
 		get_text_from_file('LICENSE'),
 	long_description_content_type = 'text/markdown',
 	keywords = 'buildout extension uttl cmake qmake qt copyfile version',
