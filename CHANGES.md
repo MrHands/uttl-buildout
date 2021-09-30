@@ -1,5 +1,9 @@
 # Changes
 
+## 1.2.2 - 2021-09-30
+
+* Small fix to README in package
+
 ## 1.2.1 - 2021-09-30
 
 * Command: Added missing `always-install` option to documentation
