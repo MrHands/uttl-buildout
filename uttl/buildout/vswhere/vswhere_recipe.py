@@ -67,6 +67,10 @@ class VsWhereRecipe(CommandRecipe):
 		if 'get-install-path' in self.options:
 			self.args += [ '-property', 'installationPath' ]
 
+		if 'get-msbuild' in self.options:
+			self.args += [ '-requires', 'Microsoft.Component.MSBuild' ]
+			self.args += [ '-find', 'MSBuild\**\Bin\MSBuild.exe' ]
+
 		# set pre=Microsoft.VisualStudio.Product.
 		# set ids=%pre%Community %pre%Professional %pre%Enterprise %pre%BuildTools
 
