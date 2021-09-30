@@ -4,7 +4,7 @@ Uses NuGet to restore .NET packages on a Visual Studio project.
 
 ## Options
 
-`executable` (default: "cmake")
+`executable` (default: "dotnet")
 
 Path to the executable used to run commands. You don't need to set this if the executable was added to the system-wide `PATH` environment variable.
 

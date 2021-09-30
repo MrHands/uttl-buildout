@@ -16,7 +16,7 @@ class CmakeRecipe(CommandRecipe):
 		if 'install-path' in self.options:
 			self.options['install-dir'] = self.options['install-path']
 
-		if 'configure-dir' in self.options:
+		if 'configure-path' in self.options:
 			self.options['configure-dir'] = self.options['configure-path']
 
 		if 'build-path' in self.options:
@@ -41,13 +41,13 @@ class CmakeRecipe(CommandRecipe):
 
 		# configure or build
 
-		if 'configure-path' in self.options:
+		if 'configure-dir' in self.options:
 			if not 'generator' in self.options:
 				raise UserError('Missing mandatory "generator" option.')
 
 			self.args += [ '-S', source_dir ]
 
-			self.working_dir = os.path.abspath(self.options['configure-path'])
+			self.working_dir = os.path.abspath(self.options['configure-dir'])
 			self.args += [ '-B', self.working_dir ]
 		else:
 			if not 'build-dir' in self.options:
