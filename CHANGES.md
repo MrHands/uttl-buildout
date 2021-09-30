@@ -1,5 +1,9 @@
 # Changes
 
+## 1.2.4 - 2021-09-30
+
+* CMake: Fix issue with `configure-dir` not working if the path does not exist yet
+
 ## 1.2.3 - 2021-09-30
 
 * Added missing package initialization for `uttl.buildout.dotnet.restore` folder
