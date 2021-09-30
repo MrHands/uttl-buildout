@@ -11,6 +11,9 @@ class VsWhereRecipe(CommandRecipe):
 		if 'version' in self.options:
 			self.args += [ '-version', self.options['version'] ]
 
+		if 'latest' in self.options:
+			self.args += [ '-latest' ]
+
 		if 'install-path' in self.options:
 			self.args += [ '-property', 'installationPath' ]
 
