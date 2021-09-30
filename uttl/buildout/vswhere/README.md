@@ -8,6 +8,8 @@
 
 `install-path` (optional)
 
+`products` (optional)
+
 ## Outputs
 
 ## Example

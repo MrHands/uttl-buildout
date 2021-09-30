@@ -17,6 +17,16 @@ class VsWhereRecipe(CommandRecipe):
 		if 'install-path' in self.options:
 			self.args += [ '-property', 'installationPath' ]
 
+		# set pre=Microsoft.VisualStudio.Product.
+		# set ids=%pre%Community %pre%Professional %pre%Enterprise %pre%BuildTools
+
+		if 'products' in self.options:
+			self.args.append('-products')
+
+			products = self.options['products'].splitlines()
+			for p in products:
+				self.args.append('Microsoft.VisualStudio.Product.' + p)
+
 		# combine arguments
 
 		self.options['args'] = ' '.join(str(e) for e in self.args)
