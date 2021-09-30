@@ -41,14 +41,17 @@ class CmakeRecipe(CommandRecipe):
 
 		# configure or build
 
+		self.configure_dir = None
+
 		if 'configure-dir' in self.options:
 			if not 'generator' in self.options:
 				raise UserError('Missing mandatory "generator" option.')
 
+			self.configure_dir = os.path.abspath(self.options['configure-dir'])
+
 			self.args += [ '-S', source_dir ]
 
-			self.working_dir = os.path.abspath(self.options['configure-dir'])
-			self.args += [ '-B', self.working_dir ]
+			self.args += [ '-B', self.configure_dir ]
 		else:
 			if not 'build-dir' in self.options:
 				raise UserError('Missing mandatory "build-dir" option.')
@@ -121,6 +124,17 @@ class CmakeRecipe(CommandRecipe):
 			self.var_args += self.additional_args
 
 	def command_install(self):
+		# change to configure directory
+
+		prev_dir = None
+		if self.configure_dir:
+			prev_dir = os.getcwd()
+
+			if not os.path.exists(self.configure_dir):
+				os.makedirs(self.configure_dir, 0o777, True)
+
+			os.chdir(self.configure_dir)
+
 		# set variables
 
 		if len(self.var_args) > 0:
@@ -129,6 +143,11 @@ class CmakeRecipe(CommandRecipe):
 		# run command
 
 		self.runCommand(self.args, parseLine=self.parseLine)
+
+		# back to working directory
+
+		if self.configure_dir:
+			os.chdir(prev_dir)
 
 	check_errors = re.compile(r'.*Error: (.*)')
 	check_failed = re.compile(r'.*(Build FAILED|CMake Error|MSBUILD : error).*')
