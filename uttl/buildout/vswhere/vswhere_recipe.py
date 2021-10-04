@@ -1,4 +1,4 @@
-import os.path
+import os
 import re
 
 from uttl.buildout.command_recipe import CommandRecipe
@@ -24,7 +24,7 @@ class VsWhereRecipe(CommandRecipe):
 
 		version = self.options['version']
 		versions_list = [
-			VsVersionInfo('latest', 999),
+			VsVersionInfo('latest', '999'),
 			VsVersionInfo('2019', '16'),
 			VsVersionInfo('2017', '15'),
 			VsVersionInfo('2015', '14'),
@@ -41,44 +41,42 @@ class VsWhereRecipe(CommandRecipe):
 
 		self.version = found[0]
 
-		if self.version.product == 'latest':
-			self.args += [ '-latest' ]
+		if self.version.useEnv:
+			self.options['args'] = ''
+
+			env_var = 'VS' + self.version.dev + '0COMNTOOLS'
+			if not env_var in os.environ:
+				raise UserError('Could not find path to Visual Studio %s.' % (self.version.product))
+
+			self.options['display-name'] = 'Visual Studio %s' % (self.version.product)
+
+			tools_dir = os.environ[env_var]
+			install_dir = os.path.abspath(os.path.join(tools_dir, '../../'))
+
+			self.options['install-dir'] = install_dir
+			self.options['product-path'] = os.path.join(install_dir, 'Common7\\IDE\\VCExpress.exe')
+			self.options['vcvars-path'] = os.path.join(install_dir, 'VC\\vcvarsall.bat')
 		else:
-			if self.version.legacy:
-				self.args += [ '-legacy' ]
+			if self.version.product == 'latest':
+				self.args += [ '-latest' ]
+			else:
+				if self.version.legacy:
+					self.args += [ '-legacy' ]
 
-			self.args += [ '-version', self.version.dev ]
+				self.args += [ '-version', self.version.dev ]
 
-		if 'get-install-path' in self.options:
-			self.args += [ '-property', 'installationPath' ]
+			self.options['args'] = ' '.join(str(e) for e in self.args)
 
-		if 'get-msbuild' in self.options:
-			self.args += [ '-requires', 'Microsoft.Component.MSBuild' ]
-			self.args += [ '-find', 'MSBuild\**\Bin\MSBuild.exe' ]
-
-		# set pre=Microsoft.VisualStudio.Product.
-		# set ids=%pre%Community %pre%Professional %pre%Enterprise %pre%BuildTools
-
-		if 'products' in self.options:
-			self.args.append('-products')
-
-			products = self.options['products'].splitlines()
-			for p in products:
-				self.args.append('Microsoft.VisualStudio.Product.' + p)
-
-		# combine arguments
-
-		self.options['args'] = ' '.join(str(e) for e in self.args)
-
-		self.runCommand(self.args, parseLine=self.parseLine)
+			self.runCommand(self.args, parseLine=self.parseLine)
 
 	def command_install(self):
 		pass
 
-	check_property = re.compile(r'\s*(\w+)\: (.+)')
+	_property = re.compile(r'\s*(\w+)\: (.+)').match
+	_semantic_version = re.compile(r'(\d+)\.(\d+).(\d+)\+(\d+)\.(\d+)$').match
 
 	def parseLine(self, line):
-		match = self.check_property.match(line)
+		match = self._property(line)
 		if match:
 			name = match.group(1)
 			value = match.group(2)
@@ -89,6 +87,8 @@ class VsWhereRecipe(CommandRecipe):
 				self.options['product-path'] = value
 			elif name == 'displayName':
 				self.options['display-name'] = value
+			elif name == 'catalog_productSemanticVersion':
+				self.versionFound = int(self._semantic_version(value).group(1))
 
 		return True
 
