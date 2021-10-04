@@ -8,61 +8,69 @@ class VsWhereRecipe(CommandRecipe):
 	def __init__(self, buildout, name, options):
 		super().__init__(buildout, name, options, executable=r'%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe')
 
-		if 'version' in self.options:
-			version = self.options['version']
-			versions_map = {
-				'latest': {
-					'dev': 'latest',
-					'legacy': False
-				},
-				'2019': {
-					'dev': '16',
-					'legacy': False
-				},
-				'2017': {
-					'dev': '15',
-					'legacy': False
-				},
-				'2015': {
-					'dev': '14',
-					'legacy': False
-				},
-				'2013': {
-					'dev': '12',
-					'legacy': False
-				},
-				'2012': {
-					'dev': '11',
-					'legacy': False
-				},
-				'2010': {
-					'dev': '10',
-					'legacy': True
-				},
-				'2008': {
-					'dev': '9',
-					'legacy': True
-				},
-				'2005': {
-					'dev': '8',
-					'legacy': True
-				},
-			}
-			if not version in versions_map:
-				raise UserError('Unhandled Visual Studio version "%s".' % (version))
+		if not 'version' in self.options:
+			raise UserError('Missing required "version" option.')
 
-			self.version = versions_map[version]
+		version = self.options['version']
+		versions_map = {
+			'latest': {
+				'product': 'latest',
+				'dev': 'latest',
+				'legacy': False
+			},
+			'2019': {
+				'product': '2019',
+				'dev': '16',
+				'legacy': False
+			},
+			'2017': {
+				'product': '2017',
+				'dev': '15',
+				'legacy': False
+			},
+			'2015': {
+				'product': '2015',
+				'dev': '14',
+				'legacy': False
+			},
+			'2013': {
+				'product': '2013',
+				'dev': '12',
+				'legacy': False
+			},
+			'2012': {
+				'product': '2012',
+				'dev': '11',
+				'legacy': False
+			},
+			'2010': {
+				'product': '2010',
+				'dev': '10',
+				'legacy': True
+			},
+			'2008': {
+				'product': '2008',
+				'dev': '9',
+				'legacy': True
+			},
+			'2005': {
+				'product': '2005',
+				'dev': '8',
+				'legacy': True
+			},
+		}
+		if not version in versions_map:
+			raise UserError('Unhandled Visual Studio version "%s".' % (version))
 
-			if self.version['dev'] == 'latest':
-				self.args += [ '-latest' ]
-			else:
-				if self.version['legacy']:
-					self.args += [ '-legacy' ]
+		self.version = versions_map[version]
 
-				self.args += [ '-version', self.version['dev'] ]
-
-		if 'latest' in self.options:
+		if self.version['dev'] == 'latest':
 			self.args += [ '-latest' ]
+		else:
+			if self.version['legacy']:
+				self.args += [ '-legacy' ]
+
+			self.args += [ '-version', self.version['dev'] ]
 
 		if 'get-install-path' in self.options:
 			self.args += [ '-property', 'installationPath' ]
