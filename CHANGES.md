@@ -1,5 +1,9 @@
 # Changes
 
+## 1.3.0 - 2021-10-04
+
+* VsWhere: New recipe for retrieving Visual Studio installation paths
+
 ## 1.2.4 - 2021-09-30
 
 * CMake: Fix issue with `configure-dir` not working if the path does not exist yet
