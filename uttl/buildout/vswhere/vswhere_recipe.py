@@ -4,6 +4,13 @@ import re
 from uttl.buildout.command_recipe import CommandRecipe
 from zc.buildout import UserError
 
+class VsVersionInfo:
+	def __init__(self, product, dev):
+		self.product = product
+		self.dev = dev
+		self.legacy = int(dev) <= 10
+		self.useEnv = int(dev) <= 9
+
 class VsWhereRecipe(CommandRecipe):
 	def __init__(self, buildout, name, options):
 		super().__init__(buildout, name, options, executable=r'%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe')
@@ -13,66 +20,30 @@ class VsWhereRecipe(CommandRecipe):
 
 		version = self.options['version']
 		versions_list = [
-			{
-				'product': 'latest',
-				'dev': 'latest',
-				'legacy': False
-			},
-			{
-				'product': '2019',
-				'dev': '16',
-				'legacy': False
-			},
-			{
-				'product': '2017',
-				'dev': '15',
-				'legacy': False
-			},
-			{
-				'product': '2015',
-				'dev': '14',
-				'legacy': False
-			},
-			{
-				'product': '2013',
-				'dev': '12',
-				'legacy': False
-			},
-			{
-				'product': '2012',
-				'dev': '11',
-				'legacy': False
-			},
-			{
-				'product': '2010',
-				'dev': '10',
-				'legacy': True
-			},
-			{
-				'product': '2008',
-				'dev': '9',
-				'legacy': True
-			},
-			{
-				'product': '2005',
-				'dev': '8',
-				'legacy': True
-			},
+			VsVersionInfo('latest', 999),
+			VsVersionInfo('2019', '16'),
+			VsVersionInfo('2017', '15'),
+			VsVersionInfo('2015', '14'),
+			VsVersionInfo('2013', '12'),
+			VsVersionInfo('2012', '11'),
+			VsVersionInfo('2010', '10'),
+			VsVersionInfo('2008', '9'),
+			VsVersionInfo('2005', '8'),
 		]
 
-		found = [v for v in versions_list if v['product'] == version or v['dev'] == version]
+		found = [v for v in versions_list if v.product == version or v.dev == version]
 		if not found:
 			raise UserError('Unhandled Visual Studio version "%s".' % (version))
 
 		self.version = found[0]
 
-		if self.version['product'] == 'latest':
+		if self.version.product == 'latest':
 			self.args += [ '-latest' ]
 		else:
-			if self.version['legacy']:
+			if self.version.legacy:
 				self.args += [ '-legacy' ]
 
-			self.args += [ '-version', self.version['dev'] ]
+			self.args += [ '-version', self.version.dev ]
 
 		if 'get-install-path' in self.options:
 			self.args += [ '-property', 'installationPath' ]
