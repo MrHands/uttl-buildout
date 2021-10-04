@@ -15,6 +15,10 @@ class VsWhereRecipe(CommandRecipe):
 	def __init__(self, buildout, name, options):
 		super().__init__(buildout, name, options, executable=r'%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe')
 
+		self.options.setdefault('display-name', '')
+		self.options.setdefault('install-dir', '')
+		self.options.setdefault('product-path', '')
+
 		if not 'version' in self.options:
 			raise UserError('Missing required "version" option.')
 
@@ -66,13 +70,27 @@ class VsWhereRecipe(CommandRecipe):
 
 		self.options['args'] = ' '.join(str(e) for e in self.args)
 
-	def command_install(self):
 		self.runCommand(self.args, parseLine=self.parseLine)
 
-	check_errors = re.compile(r'.*ERROR:\s*(.*)')
+	def command_install(self):
+		pass
+
+	check_property = re.compile(r'\s*(\w+)\: (.+)')
 
 	def parseLine(self, line):
-		return not self.check_errors.match(line)
+		match = self.check_property.match(line)
+		if match:
+			name = match.group(1)
+			value = match.group(2)
+
+			if name == 'installationPath':
+				self.options['install-dir'] = value
+			elif name == 'productPath':
+				self.options['product-path'] = value
+			elif name == 'displayName':
+				self.options['display-name'] = value
+
+		return True
 
 def uninstall(name, options):
 	pass

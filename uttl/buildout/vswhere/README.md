@@ -20,6 +20,22 @@ Version of Visual Studio that you want to retrieve. Can be a product number (e.g
 
 ## Outputs
 
+`display-name`
+
+Full name for the product, e.g. Visual Studio Community 2017.
+
+`install-dir`
+
+Path to the Visual Studio installation directory.
+
+`product-path`
+
+Path to the executable for the Visual Studio IDE.
+
+`vcvars-path`
+
+Path to the `vcvarsall.bat` batch script for setting up the Visual Studio environment on the command-line.
+
 ## Example
 
 	[visual-studio]
