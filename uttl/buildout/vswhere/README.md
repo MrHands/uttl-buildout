@@ -30,9 +30,9 @@ Version number for the tools, e.g. "9" for Visual Studio 2008.
 
 Path to the Visual Studio installation directory.
 
-`product-path`
+`tool-path`
 
-Path to the executable for the Visual Studio IDE.
+Path to the executable used for running Visual Studio commands.
 
 `vcvars-path`
 

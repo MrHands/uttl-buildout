@@ -17,7 +17,7 @@ class VsWhereRecipe(CommandRecipe):
 
 		self.options.setdefault('display-name', '')
 		self.options.setdefault('install-dir', '')
-		self.options.setdefault('product-path', '')
+		self.options.setdefault('tool-path', '')
 
 		if not 'version' in self.options:
 			raise UserError('Missing required "version" option.')
@@ -60,7 +60,7 @@ class VsWhereRecipe(CommandRecipe):
 			install_dir = os.path.abspath(os.path.join(tools_dir, '../../'))
 
 			self.options['install-dir'] = install_dir
-			self.options['product-path'] = os.path.join(install_dir, 'Common7\\IDE\\VCExpress.exe')
+			self.options['tool-path'] = os.path.join(install_dir, 'Common7\\IDE\\VCExpress.exe')
 			self.options['vcvars-path'] = os.path.join(install_dir, 'VC\\vcvarsall.bat')
 		else:
 			# use vswhere
@@ -77,6 +77,7 @@ class VsWhereRecipe(CommandRecipe):
 
 			self.runCommand(self.args, parseLine=self.parseLine, quiet=True)
 
+			self.options['tool-path'] = os.path.join(self.options['install-dir'], 'Common7\\IDE\\devenv.com')
 			self.options['vcvars-path'] = os.path.join(self.options['install-dir'], 'VC\\Auxiliary\\Build\\vcvarsall.bat')
 
 		# check if we were successful
@@ -107,8 +108,6 @@ class VsWhereRecipe(CommandRecipe):
 
 			if name == 'installationPath':
 				self.options['install-dir'] = value
-			elif name == 'productPath':
-				self.options['product-path'] = value
 			elif name == 'displayName':
 				self.options['display-name'] = value
 				self.product_found = self._extract_version(value).group(1)
