@@ -12,59 +12,61 @@ class VsWhereRecipe(CommandRecipe):
 			raise UserError('Missing required "version" option.')
 
 		version = self.options['version']
-		versions_map = {
-			'latest': {
+		versions_list = [
+			{
 				'product': 'latest',
 				'dev': 'latest',
 				'legacy': False
 			},
-			'2019': {
+			{
 				'product': '2019',
 				'dev': '16',
 				'legacy': False
 			},
-			'2017': {
+			{
 				'product': '2017',
 				'dev': '15',
 				'legacy': False
 			},
-			'2015': {
+			{
 				'product': '2015',
 				'dev': '14',
 				'legacy': False
 			},
-			'2013': {
+			{
 				'product': '2013',
 				'dev': '12',
 				'legacy': False
 			},
-			'2012': {
+			{
 				'product': '2012',
 				'dev': '11',
 				'legacy': False
 			},
-			'2010': {
+			{
 				'product': '2010',
 				'dev': '10',
 				'legacy': True
 			},
-			'2008': {
+			{
 				'product': '2008',
 				'dev': '9',
 				'legacy': True
 			},
-			'2005': {
+			{
 				'product': '2005',
 				'dev': '8',
 				'legacy': True
 			},
-		}
-		if not version in versions_map:
+		]
+
+		found = [v for v in versions_list if v['product'] == version or v['dev'] == version]
+		if not found:
 			raise UserError('Unhandled Visual Studio version "%s".' % (version))
 
-		self.version = versions_map[version]
+		self.version = found[0]
 
-		if self.version['dev'] == 'latest':
+		if self.version['product'] == 'latest':
 			self.args += [ '-latest' ]
 		else:
 			if self.version['legacy']:
