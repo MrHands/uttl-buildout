@@ -74,7 +74,7 @@ class VsWhereRecipe(CommandRecipe):
 
 			self.options['vcvars-path'] = os.path.join(self.options['install-dir'], 'VC\\Auxiliary\\Build\\vcvarsall.bat')
 
-		if self.version_found < int(self.version.dev):
+		if self.version_found < int(self.version.dev) and self.version.product != 'latest':
 			raise UserError('Visual Studio %s was not found.' % (self.version.product))
 
 		if not os.path.exists(self.options['vcvars-path']):
