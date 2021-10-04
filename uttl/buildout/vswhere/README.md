@@ -38,8 +38,11 @@ Path to the executable for the Visual Studio IDE.
 
 Path to the `vcvarsall.bat` batch script for setting up the Visual Studio environment on the command-line.
 
-## Example
+## Example - Set up generator for CMake based on Visual Studio version
 
 	[visual-studio]
 	recipe = uttl.buildout:vswhere
 	version = latest
+
+	[cmake]
+	generator = Visual Studio ${visual-studio:version-tools} ${visual-studio:version-product} Win64
