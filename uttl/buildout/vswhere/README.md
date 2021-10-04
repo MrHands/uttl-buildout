@@ -12,12 +12,6 @@ Path to the executable used to run commands. While the executable should always 
 
 Version of Visual Studio that you want to retrieve. Can be a product number (e.g. 2017), a tools number (e.g. 10), or "latest". An error will be raised if the requested version could not be found.
 
-`latest` (optional)
-
-`install-path` (optional)
-
-`products` (optional)
-
 ## Outputs
 
 `display-name`

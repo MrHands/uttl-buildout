@@ -9,7 +9,7 @@ class VsVersionInfo:
 		self.product = product
 		self.dev = dev
 		self.legacy = int(dev) <= 10
-		self.useEnv = int(dev) <= 9
+		self.use_env = int(dev) <= 9
 
 class VsWhereRecipe(CommandRecipe):
 	def __init__(self, buildout, name, options):
@@ -40,13 +40,16 @@ class VsWhereRecipe(CommandRecipe):
 			raise UserError('Unhandled Visual Studio version "%s".' % (version))
 
 		self.version = found[0]
+		self.version_found = 0
 
-		if self.version.useEnv:
+		if self.version.use_env:
 			self.options['args'] = ''
 
 			env_var = 'VS' + self.version.dev + '0COMNTOOLS'
 			if not env_var in os.environ:
 				raise UserError('Could not find path to Visual Studio %s.' % (self.version.product))
+
+			self.version_found = int(self.version.dev)
 
 			self.options['display-name'] = 'Visual Studio %s' % (self.version.product)
 
@@ -67,7 +70,15 @@ class VsWhereRecipe(CommandRecipe):
 
 			self.options['args'] = ' '.join(str(e) for e in self.args)
 
-			self.runCommand(self.args, parseLine=self.parseLine)
+			self.runCommand(self.args, parseLine=self.parseLine, quiet=True)
+
+			self.options['vcvars-path'] = os.path.join(self.options['install-dir'], 'VC\\Auxiliary\\Build\\vcvarsall.bat')
+
+		if self.version_found < int(self.version.dev):
+			raise UserError('Visual Studio %s was not found.' % (self.version.product))
+
+		if not os.path.exists(self.options['vcvars-path']):
+			raise UserError('Failed to retrieve path to "vcvarsall.bat" script.')
 
 	def command_install(self):
 		pass
@@ -76,6 +87,8 @@ class VsWhereRecipe(CommandRecipe):
 	_semantic_version = re.compile(r'(\d+)\.(\d+).(\d+)\+(\d+)\.(\d+)$').match
 
 	def parseLine(self, line):
+		self.log.debug(line)
+
 		match = self._property(line)
 		if match:
 			name = match.group(1)
@@ -88,7 +101,7 @@ class VsWhereRecipe(CommandRecipe):
 			elif name == 'displayName':
 				self.options['display-name'] = value
 			elif name == 'catalog_productSemanticVersion':
-				self.versionFound = int(self._semantic_version(value).group(1))
+				self.version_found = int(self._semantic_version(value).group(1))
 
 		return True
 
