@@ -18,6 +18,14 @@ Version of Visual Studio that you want to retrieve. Can be a product number (e.g
 
 Full name for the product, e.g. "Visual Studio Community 2017".
 
+`version-product`
+
+Version number for the product, e.g. "2019" for Visual Studio 2019.
+
+`version-tools`
+
+Version number for the tools, e.g. "9" for Visual Studio 2008.
+
 `install-dir`
 
 Path to the Visual Studio installation directory.
