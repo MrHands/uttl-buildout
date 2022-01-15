@@ -1,5 +1,9 @@
 # Changes
 
+## 1.3.1 - 2022-01-15
+
+* VersionCheck: Fix bug where minor version was not checked correctly
+
 ## 1.3.0 - 2021-10-04
 
 * VsWhere: New recipe for retrieving Visual Studio installation paths

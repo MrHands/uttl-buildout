@@ -28,7 +28,7 @@ def get_text_from_file(path):
 	return open(path, encoding='utf-8').read()
 
 setup(name = 'uttl.buildout',
-	version = '1.3.0',
+	version = '1.3.1',
 	description = 'Utilities for Buildout developed for Up There They Love.',
 	long_description =
 		get_text_from_file('README.md') +
